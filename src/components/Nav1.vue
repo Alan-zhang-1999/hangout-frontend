@@ -9,6 +9,8 @@
     <router-link to="/Login">Login</router-link> |
     <router-link to="/SignUp">SignUp</router-link>
     <router-view></router-view>
+
+
   </template>
 
 <script>
