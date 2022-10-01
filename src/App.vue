@@ -5,12 +5,11 @@
 
 <script>
 import Nav from './components/Nav1.vue'
-import Home from './components/Home.vue'
+
 export default {
   name: 'App',
   components: {
-    Nav,
-    Home
+    Nav
 }
 }
 </script>

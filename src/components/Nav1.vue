@@ -7,7 +7,7 @@
     <router-link to="/Events">Events</router-link> |
     <router-link to="/Profile">Profile</router-link> |
     <router-link to="/Login">Login</router-link> |
-    <router-link to="/SigeUp">SignUp</router-link>
+    <router-link to="/SignUp">SignUp</router-link>
     <router-view></router-view>
   </template>
 
