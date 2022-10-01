@@ -1,6 +1,9 @@
 <template>
-    <h1>
-        welcome to Hangout
-        test
-    </h1>
+    <h1>Your next event is coming soon!</h1>
+    <div>
+
+    </div>
+    <div>
+        
+    </div>
 </template>
