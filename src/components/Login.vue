@@ -1,34 +1,35 @@
 <template>
-    <form @submit.prevent = "login">
-        <div>
-            <label for="">Email</label><br/>
-            <input type="text"/>
-        </div>
-        <div>
-            <label for="">Password</label><br/>
-            <input type="text"/>
-        </div>
-        <div>
-            <router-link to="/">Retrieve</router-link> |
-            <router-link to="/SignUp">Register</router-link>
-        </div>
-        <br>
-        <div>
-            <button >Login in</button>
-        </div>
-    </form>
+    <h1>Login Page</h1>
+    <el-form ref="form" label-width="100px">
+        <el-form-item label="Email">
+            <el-input v-model="email"></el-input>
+        </el-form-item>
+        <el-form-item label="Password">
+            <el-input v-model="Password" type="password"></el-input>
+        </el-form-item>
+        <router-link to="forget">forget password</router-link> | 
+        <router-link to="SignUp">Register</router-link>
+        <el-form-item>
+            <el-button type="primary" @click="onSubmit">Login</el-button>
+        </el-form-item>
+    </el-form>
 </template>
 
 <script>
     export default{
-        data(){
+        data() {
             return {
-                username: "",
-                password: ""
+                email: "",
+                Password: ""
             }
         },
         method:{
-
+            onSubmit() {
+                console.log('submit!');
+            }
         }
     }
 </script>
+<style>
+
+</style>

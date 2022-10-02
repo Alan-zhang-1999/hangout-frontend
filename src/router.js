@@ -26,7 +26,7 @@ const router = createRouter({
             component: Group 
         },
         { 
-            path: "/Event",
+            path: "/Events",
             component: Event 
         },
         { 
