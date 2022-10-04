@@ -1,7 +1,7 @@
 <template>
     <div class="nav-box">
         <el-menu class="nav-menu" mode="horizontal"  >
-            <img src="" alt="Hangout"/>
+            <img src="../img/logo.jpg" alt="Hangout" width="100" height="40"/>
             <el-menu-item><router-link to="/Home">Home</router-link></el-menu-item>
             <el-menu-item><router-link to="/Group">Group</router-link></el-menu-item>
             <el-menu-item><router-link to="/Events">Events</router-link></el-menu-item>
