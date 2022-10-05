@@ -7,6 +7,10 @@
                 </el-input>
             </el-form-item>
             <el-button icon="el-icon-search" circle></el-button>
+
+            <el-icon :size="size" :color="color">
+                <search />
+            </el-icon>
             <el-button type="primary" @click="toCreateEvent" round>Create Event</el-button>
         </el-form>
     </el-row>
