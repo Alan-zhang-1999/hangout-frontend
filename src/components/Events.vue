@@ -11,12 +11,12 @@
         </el-form>
     </el-row>
     <div>
-        <li v-for="event in events">
+        <article v-for="event in events" class="cc">
             <img src="{{ event.img}}"/>
             <p>{{ event.name }}</p>
             <p>{{event.date}}</p>
             <p>{{event.location}}</p>
-        </li>
+        </article> 
     </div>
 </template>
 <script>
@@ -34,6 +34,9 @@
                     },
                     {
 
+                    },
+                    {
+
                     }
                 ]
             }
@@ -45,3 +48,14 @@
         }
     }
 </script>
+
+<style>
+    .cc{
+        float:left;
+		width: 45%;
+		height: 200px;
+		padding: 5px;
+		box-shadow: 3px 3px 3px 2px #797979;
+		margin: 1em 1em 1em 2.5em;
+    }
+</style>

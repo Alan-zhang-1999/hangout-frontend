@@ -1,9 +1,27 @@
 <template>
     <h1>Your next event is coming soon!</h1>
-    <div>
+    <article>
+        <article>
 
-    </div>
-    <div>
-        
-    </div>
+        </article>
+    </article>
+    <article>
+        <article>
+                    
+        </article>
+    </article>
 </template>
+<script>
+    export default{
+        data(){
+
+        },
+        methods:{
+            
+        }
+
+    }
+</script>
+<style>
+
+</style>
