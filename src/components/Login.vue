@@ -30,7 +30,6 @@ export default{
     },
     methods:{
         onSubmit() {
-            console.log("111")
             this.axios( {
                 url: "/api/login",
                 method: "post",
@@ -41,6 +40,7 @@ export default{
             }).then(response => {
                 console.log(this.Password)
                 console.log(response.data)
+                this.$router.push('/Home')
             })
         }
     }
