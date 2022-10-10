@@ -22,8 +22,8 @@
                 <el-time-picker placeholder="time" v-model="event.date2" style="width: 100%;"></el-time-picker>
                 </el-col>
             </el-form-item>
-            <el-form-item label="Describe your event">
-                <el-input type="textarea" v-model="event.desc"></el-input>
+            <el-form-item label="Description">
+                <el-input type="textarea" v-model="event.information"></el-input>
                 (At least 50 words)
             </el-form-item>
             <el-form-item label="Photos">
@@ -39,8 +39,8 @@
             </el-form-item>
             
             <el-form-item>
-                <el-button type="primary" @click="">Create</el-button>
-                <el-button>Cancel</el-button>
+                <el-button type="primary" @click="createEvent">Create</el-button>
+                <el-button type="primary" @click="back">Cancel</el-button>
             </el-form-item>
         </div>
     </el-form>
@@ -64,8 +64,35 @@ export default{
     methods:{
         back() {
             this.$router.go(-1)
+        },
+        mergeDateAndTime() {
+            var date = this.event.date1
+            var time = this.event.date2
+            var dateAndTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds())
+            return dateAndTime
+        },
+        createEvent() {
+            this.axios({
+                url: "/api/event/create",
+                method: "post",
+                data: {
+                    "name": this.event.name,
+                    "location": this.event.location,
+                    "topic": this.event.topic,
+                    "time": this.mergeDateAndTime(),
+                    "information": this.event.information,
+                    "backgroundImage": "link"
+                }
+            }).then(response => {
+                console.log(response.data)
+                this.back()
+            })
+            console.log(this.mergeDateAndTime())
         }
+        
+
     }
+
 
 }
 </script>

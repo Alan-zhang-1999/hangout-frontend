@@ -18,36 +18,60 @@
         <article v-for="event in events" class="cc">
             <img src="{{ event.img}}"/>
             <p>{{ event.name }}</p>
-            <p>{{event.date}}</p>
+            <p>{{formatDate(event.time)}}</p>
             <p>{{event.location}}</p>
+            <p>{{event.topic}}</p>
+            <p>{{event.information}}</p>
         </article> 
     </div>
 </template>
 <script>
+    import moment from 'moment'
+
     export default{
         data(){
             return{
                 newevent:"",
                 events: [
-                    {
-                        id: "",
-                        name: "xxxx",
-                        date: "yy-mm-dd",
-                        location: "hotel",
-                        img: "",
-                    },
-                    {
+                    // {
+                    //     id: "",
+                    //     name: "xxxx",
+                    //     date: "yy-mm-dd",
+                    //     location: "hotel",
+                    //     img: "",
+                    // },
+                    // {
 
-                    },
-                    {
+                    // },
+                    // {
 
-                    }
+                    // }
                 ]
             }
         },
+        mounted: function() {
+            this.getEvents();
+        },
+        watch: {
+			$route(){
+				this.getEvents();
+			}
+		},
         methods:{
             toCreateEvent(){
                 this.$router.push('/createEvent')
+            },
+            getEvents(){
+                this.axios({
+                    url: "/api/event/all",
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data)
+                    this.events = response.data
+                })
+            },
+            formatDate(date) {
+                return moment(date).format('YYYY-MM-DD HH:mm:ss')
             }
         }
     }

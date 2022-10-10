@@ -25,8 +25,33 @@
                 email: ""
             }
         },
-        method:{
-
+        methods:{
+            onSubmit(){
+                this.axios({
+                    url: "/api/register",
+                    method: "post",
+                    data: {
+                        "username": this.username,
+                        "password": this.password,
+                        "email": this.email
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    if (response.data.status == true) {
+                        this.axios({
+                            url: "/api/login",
+                            method: "post",
+                            data: {
+                                "email": this.email,
+                                "password": this.password
+                            }
+                        }).then(response => {
+                            console.log(response.data)
+                            this.$router.push('/Home')
+                        })
+                    }
+                })
+            }
         }
     }
 </script>
