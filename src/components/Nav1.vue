@@ -19,13 +19,13 @@
                 </el-dropdown>
             </el-menu-item>
             <el-menu-item class="bb" v-else>
-            <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
-            <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
+                <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
+                <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
             </el-menu-item>
         </el-menu>
     </div>
     <router-view></router-view>
-  </template>
+</template>
 
 <script>
 
@@ -98,7 +98,7 @@
                 this.$router.push('/Login')
             },
             goProfile() {
-                this.$route.push('/Profile')
+                this.$router.push('/Profile')
             }
         }
     }
