@@ -1,55 +1,57 @@
 <template>
-    <h1>Events Page</h1>
-    <el-row>
-        <el-form ref="form">
-            <el-form-item>
-                <el-input placeholder="search event" v-model="email">
-                </el-input>
-            </el-form-item>
-            <el-button icon="el-icon-search" circle></el-button>
+    <!-- <h1>Events Page</h1> -->
+    <div class="page">
+        <el-row>
+            <el-form ref="form">
+                <el-form-item>
+                    <el-input placeholder="search event" v-model="keyword">
+                    </el-input>
+                </el-form-item>  
+                
+            </el-form>
+            <el-button type="primary" @click="serachEvent">Search&nbsp;
+                <el-icon :size="size" :color="color">
+                    <search />
+                </el-icon></el-button>
+            <el-button type="primary" @click="toCreateEvent">Create Event</el-button>
+            
+        </el-row>
+        <el-row>
+            <el-button type="primary" @click="getEvents">All</el-button>
+            <el-button type="primary" @click="getPastEvents">Past</el-button>
+            <el-button type="primary" @click="getCurrentEvents">Current</el-button>
+            <el-button type="primary" v-if="user.loginStatus" @click="getJoinedEvents">Joined</el-button>
 
-            <el-icon :size="size" :color="color">
-                <search />
-            </el-icon>
-            <el-button type="primary" @click="toCreateEvent" round>Create Event</el-button>
-        </el-form>
-    </el-row>
-    <div>
-        <article v-for="event in events" class="cc">
-            <img src="{{ event.img}}"/>
-            <p>{{ event.name }}</p>
-            <p>{{formatDate(event.time)}}</p>
-            <p>{{event.location}}</p>
-            <p>{{event.topic}}</p>
-            <p>{{event.information}}</p>
-        </article> 
+        </el-row>
+        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+            <!-- <img src="{{ event.img}}"/> -->
+            <p>Name: {{ event.name }}</p>
+            <p>Date: {{formatDate(event.time)}}</p>
+            <p>Location: {{event.location}}</p>
+            <!-- <p>Topic: {{event.topic}}</p>
+            <p>Description: {{event.information}}</p> -->
+        </div> 
     </div>
+
 </template>
 <script>
     import moment from 'moment'
+    import { checkLoginStatus } from '../main.js'
 
     export default{
         data(){
             return{
-                newevent:"",
-                events: [
-                    // {
-                    //     id: "",
-                    //     name: "xxxx",
-                    //     date: "yy-mm-dd",
-                    //     location: "hotel",
-                    //     img: "",
-                    // },
-                    // {
-
-                    // },
-                    // {
-
-                    // }
-                ]
+                events: [],
+                keyword: "",
+                user: {}
             }
         },
-        mounted: function() {
+        mounted: async function() {
+            console.log("mounted")
+            console.log(await checkLoginStatus());
+            this.user = await checkLoginStatus();
+            console.log(this.user.email);
+            
             this.getEvents();
         },
         watch: {
@@ -61,9 +63,50 @@
             toCreateEvent(){
                 this.$router.push('/createEvent')
             },
+            serachEvent() {
+                this.axios({
+                    url: "/api/event/search",
+                    method: "get",
+                    params: {
+                        "keyword": this.keyword
+                    }
+                }).then(response => {
+                    this.events = response.data
+                })
+            },
+            getEventDetail(id) {
+                this.$router.push('/eventdetail/'+id)
+            },
             getEvents(){
                 this.axios({
                     url: "/api/event/all",
+                    method: "get",
+                }).then(response => {
+                    this.events = response.data
+                })
+            },
+            getPastEvents() {
+                this.axios({
+                    url: "/api/event/past",
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data)
+                    this.events = response.data
+                })
+            },
+            getCurrentEvents() {
+                this.axios({
+                    url: "/api/event/current",
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data)
+                    this.events = response.data
+                })
+            },
+            getJoinedEvents() {
+                console.log(this.user.email);
+                this.axios({
+                    url: "/api/joinedevents/"+this.user.email,
                     method: "get",
                 }).then(response => {
                     console.log(response.data)
@@ -78,12 +121,26 @@
 </script>
 
 <style>
-    .cc{
-        float:left;
-		width: 45%;
-		height: 200px;
-		padding: 5px;
-		box-shadow: 3px 3px 3px 2px #797979;
-		margin: 1em 1em 1em 2.5em;
+    .event-container {
+		width: 80%;
+		height: 100px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
+        border-radius:10px;
+        margin-top: 20px;
+        margin-bottom: 20px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+        /* background-color: white; */
+
+    }
+    
+    .event-container:hover {
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
+    }
+
+    .page {
+        padding: 20px;
+        /* background-color: #EDF7FE; */
     }
 </style>

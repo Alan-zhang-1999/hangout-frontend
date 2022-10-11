@@ -73,7 +73,6 @@
                         })
                     }
                     console.log(this.loginStatus, response.data.status)
-                    console.log('this.background', this.background)
                     
                 })
             },
