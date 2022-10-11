@@ -10,6 +10,7 @@
 </template>
 <script>
     import moment from 'moment'
+    import { formatDate } from '../main.js'
     export default {
         data(){
             return{
@@ -34,19 +35,19 @@
 		},
         methods: {
             back() {
-                this.$router.go(-1)
+                this.$router.go(-1);
             },
             getEventDetail(id) {
                 this.axios({
                         url: "/api/event/"+id,
                         method: "get",
                     }).then(response => {
-                        console.log(response.data)
-                        this.event = response.data
+                        console.log(response.data);
+                        this.event = response.data;
                     })
             },
             formatDate(date) {
-                return moment(date).format('YYYY-MM-DD HH:mm:ss')
+                return formatDate(date);
             }
         }
         

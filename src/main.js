@@ -5,6 +5,7 @@ import router from './router.js'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElIcons from '@element-plus/icons-vue'
+import moment from 'moment'
 
 // import Axios from 'axios'
 import axios from 'axios'
@@ -25,6 +26,7 @@ app.use(ElementPlus).use(router).mount('#app')
 export async function checkLoginStatus() {
     var data = {
         loginStatus: false,
+		id: 0,
 		email: "",
         background: "",
         biography: "",
@@ -59,4 +61,18 @@ export async function checkLoginStatus() {
     } else {
         return data;
     }
+}
+
+export async function getUserId(email) {
+	const response = await axios({
+		url: "/api/user/" + email,
+		method: "get",
+	}).then(response => {
+		return response.data;
+	});
+	return response;
+}
+
+export function formatDate(date) {
+	return moment(date).format('YYYY-MM-DD HH:mm:ss')
 }
