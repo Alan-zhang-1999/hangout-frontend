@@ -1,4 +1,5 @@
 <template>
+<meta name="referrer" content="no-referrer">
     <h1>Groups page</h1>
     <el-row>
         <el-form ref="form">
@@ -12,37 +13,42 @@
     </el-row>
     <div>
         <article v-for="group in groups" class="gg">
-            <p><img src="{{ group.img}}"/>
-            <p>{{ group.name }}</p>
-            <p>{{group.date}}</p>
+            <p><img :src="group.backgroundImage"/>
+            <p>{{group.name }}</p>
+            <p>{{group.information}}</p>
             <p>{{group.location}}</p></p>
         </article> 
     </div>
 </template>
 <script>
+
     export default{
         data(){
             return{
                 newgroup:"",
-                groups: [
-                    {
-                        id: "",
-                        name: "xxxx",
-                        date: "yy-mm-dd",
-                        location: "hotel",
-                        img: "",
-                    },
-                    {
-
-                    },
-                    {
-
-                    }
-                ]
+                groups: []
             }
         },
+        mounted: function() {
+            this.loadAllGroups();
+        },
+        name: "Group",
+        watch: {
+			$route(){
+				this.loadAllGroups();
+			}
+		},
         methods:{
-            toCreateGroup(){
+            loadAllGroups() {
+                this.axios({
+                    url: "/api/showGroups",
+                    method: "get"
+                }).then(response => {
+                    this.groups = response.data;
+                    console.log(response.data)
+                })
+            },
+            toCreateGroup() {
                 this.$router.push('/createGroup')
             }
         }

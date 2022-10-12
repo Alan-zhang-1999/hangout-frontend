@@ -6,7 +6,7 @@ import Profile from "./components/Profile.vue"
 import Login from "./components/Login"
 import SignUp from "./components/SignUp"
 import groupdetails from "./components/groupdetail.vue"
-import eventdetails from "./components/eventdetail.vue"
+import EventDetail from "./components/EventDetail.vue"
 import createGroup from "./components/createGroup.vue"
 import createEvent from "./components/createEvent.vue"
 
@@ -38,8 +38,8 @@ const router = createRouter({
             component: groupdetails 
         },
         { 
-            path: "/eventdetails",
-            component: eventdetails 
+            path: "/eventdetail/:id",
+            component: EventDetail
         },
         { 
             path: "/createGroup",

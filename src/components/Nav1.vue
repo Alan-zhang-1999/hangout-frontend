@@ -1,25 +1,102 @@
 <template>
     <div class="nav-box">
-        <el-menu class="nav-menu" mode="horizontal"  >
-            <img src="" alt="Hangout"/>
+        <el-menu class="nav-menu" mode="horizontal" >
+            <img src="../img/logo.jpg" alt="Hangout" width="100" height="40"/>
             <el-menu-item><router-link to="/Home">Home</router-link></el-menu-item>
             <el-menu-item><router-link to="/Group">Group</router-link></el-menu-item>
             <el-menu-item><router-link to="/Events">Events</router-link></el-menu-item>
             <el-menu-item><router-link to="/Profile">Profile</router-link></el-menu-item>
-            <el-menu-item><router-link to="" class="login-link" ></router-link></el-menu-item>
-            <el-menu-item><router-link to="/Login" >Login</router-link></el-menu-item>
-            <el-menu-item class="bb"><el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button></el-menu-item>
+            <!-- <el-menu-item><router-link to="" class="login-link" ></router-link></el-menu-item> -->
+            <el-menu-item v-if="loginStatus">
+                <el-dropdown>
+                    <el-avatar>user</el-avatar>
+                    <template #dropdown>
+                    <el-dropdown-menu>
+                        <el-dropdown-item><el-button type="primary" @click="goProfile" class="btn-sign" size="medium">Profile</el-button></el-dropdown-item>
+                        <el-dropdown-item><el-button type="primary" @click="logout" class="btn-sign" size="medium">Logout</el-button></el-dropdown-item>
+                    </el-dropdown-menu>
+                    </template>
+                </el-dropdown>
+            </el-menu-item>
+            <el-menu-item class="bb" v-else>
+                <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
+                <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
+            </el-menu-item>
         </el-menu>
     </div>
     <router-view></router-view>
-  </template>
+</template>
 
 <script>
+
+
     export default{
+        data() {
+            return {
+                loginStatus: false,
+                background: "",
+                biography: "",
+                bithday: "",
+                gender: "",
+                job: "",
+                location: "",
+            }
+        },
         name: "nav1",
+        mounted: function() {
+            this.checkLoginStatus();
+        },
+        watch: {
+			$route(){
+				this.checkLoginStatus();
+			}
+		},
         methods: {
-            goSignUp(){
+            checkLoginStatus() {
+                this.axios({
+                    url: "/api/user/isLogin",
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data)
+                    this.loginStatus = response.data.status
+                    if (response.data.email != null){
+                        this.axios({
+                            url: "/api/userProfile/" + response.data.email,
+                            method: "get",
+                        }).then(response => {
+                            this.background = response.data.background
+                            this.biography = response.data.biography
+                            this.bithday = response.data.bithday
+                            this.gender = response.data.gender
+                            this.job = response.data.job
+                            this.location = response.data.location
+                        })
+                    }
+                    
+                })
+            },
+            logout() {
+                this.axios({
+                    url: "/api/user/logout",
+                    method: "get"
+                }).then(response => {
+
+                    if (response.data.status) {
+                        console.log(response.data.message)
+                    } else {
+                        console.log(response.data.message)
+                    }
+                    this.$router.go(0)
+                })
+            },
+            goSignUp() {
                 this.$router.push('/SignUp')
+            },
+            goLogin() {
+                this.$router.push('/Login')
+            },
+            goProfile() {
+                this.$router.push('/Profile')
             }
         }
     }

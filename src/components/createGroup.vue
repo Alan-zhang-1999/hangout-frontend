@@ -10,20 +10,20 @@
             <el-form-item label="Location">
                 <el-input v-model="group.location"></el-input>
             </el-form-item>
-            <el-form-item label="Topic">
+            <!-- <el-form-item label="Topic">
                 <el-input v-model="group.topic"></el-input>
-            </el-form-item>
-            <el-form-item label="Describe your event">
+            </el-form-item> -->
+            <el-form-item label="Information(Describe your group)">
                 <el-input type="textarea" v-model="group.desc"></el-input>
                 (At least 50 words)
             </el-form-item>
-            <el-form-item label="Group size">
+            <!-- <el-form-item label="Group size">
                 <el-radio-group v-model="group.size">
                 <el-radio label="1-4 people"></el-radio>
                 <el-radio label="5-10 people"></el-radio>
                 <el-radio label="more than 10 people"></el-radio>
                 </el-radio-group>
-            </el-form-item>
+            </el-form-item> -->
             <el-form-item label="Photos">
                 <el-upload
                 class="upload-demo"
@@ -37,7 +37,7 @@
             </el-form-item>
             
             <el-form-item>
-                <el-button type="primary" @click="">Create</el-button>
+                <el-button type="primary" @click="createGroup">Create</el-button>
                 <el-button class="cbtn">Cancel</el-button>
             </el-form-item>
             
@@ -47,21 +47,36 @@
 </template>
 
 <script>
+
 export default{
     data(){
        return{
            group:{
                 name: "",
                 location: "",
-                topic: "",
-                desc: "",
-                size: "",
+                information: "",
+                backgroundImage: "",
            }
        }
     },
     methods:{
         back() {
             this.$router.go(-1)
+        }, 
+        createGroup() {
+            this.axios({
+                url: "/api/createGroup",
+                method: "post",
+                data: {
+                    "name": this.group.name,
+                    "location": this.group.laction,
+                    "information": this.group.information,
+                    "backgroundImage": this.backgroundImage
+                }
+            }).then(response => {
+                console.log(response.data.message)
+                this.$router.push("/Group")
+            })
         }
     }
 

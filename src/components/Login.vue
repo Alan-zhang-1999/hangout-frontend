@@ -19,19 +19,32 @@
 </template>
 
 <script>
-    export default{
-        data() {
-            return {
-                email: "",
-                Password: ""
-            }
-        },
-        method:{
-            onSubmit() {
-                console.log('submit!');
-            }
+// import axios from 'axios';
+// axios.defaults.withCredentials = true
+export default{
+    data() {
+        return {
+            email: "",
+            Password: ""
+        }
+    },
+    methods:{
+        onSubmit() {
+            this.axios( {
+                url: "/api/login",
+                method: "post",
+                data: {
+                    "email": this.email,
+                    "password": this.Password
+                },
+            }).then(response => {
+                console.log(this.Password)
+                console.log(response.data)
+                this.$router.push('/Home')
+            })
         }
     }
+}
 </script>
 <style>
     .login-form{
