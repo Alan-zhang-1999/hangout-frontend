@@ -72,7 +72,6 @@
                             this.location = response.data.location
                         })
                     }
-                    console.log(this.loginStatus, response.data.status)
                     
                 })
             },
