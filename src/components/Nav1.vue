@@ -22,86 +22,63 @@
                 <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
                 <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
             </el-menu-item>
-            <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
         </el-menu>
     </div>
     <router-view></router-view>
 </template>
 
 <script>
+    import { checkLoginStatus} from '../main.js'
 
     export default{
-    data() {
-        return {
-            loginStatus: false,
-            background: "",
-            biography: "",
-            bithday: "",
-            gender: "",
-            job: "",
-            location: "",
-        };
-    },
-    name: "nav1",
-    mounted: function () {
-        this.checkLoginStatus();
-    },
-    watch: {
-        $route() {
+        data() {
+            return {
+                loginStatus: false,
+                background: "",
+                biography: "",
+                bithday: "",
+                gender: "",
+                job: "",
+                location: "",
+            }
+        },
+        name: "nav1",
+        mounted: function() {
             this.checkLoginStatus();
-        }
-    },
-    methods: {
-        checkLoginStatus() {
-            this.axios({
-                url: "/api/user/isLogin",
-                method: "get",
-            }).then(response => {
-                console.log(response.data);
-                this.loginStatus = response.data.status;
-                if (response.data.email != null) {
-                    this.axios({
-                        url: "/api/userProfile/" + response.data.email,
-                        method: "get",
-                    }).then(response => {
-                        this.background = response.data.background;
-                        this.biography = response.data.biography;
-                        this.bithday = response.data.bithday;
-                        this.gender = response.data.gender;
-                        this.job = response.data.job;
-                        this.location = response.data.location;
-                    });
-                }
-                console.log(this.loginStatus, response.data.status);
-                console.log("this.background", this.background);
-            });
         },
-        logout() {
-            this.axios({
-                url: "/api/user/logout",
-                method: "get"
-            }).then(response => {
-                if (response.data.status) {
-                    console.log(response.data.message)
-                } else {
-                    console.log(response.data.message)
-                }
-                this.$router.go(0)
-            })
-        },
-        goSignUp() {
-            this.$router.push('/SignUp')
-        },
-        goLogin() {
-            console.log("login")
-            this.$router.push('/login')
-        },
-        goProfile() {
-            this.$router.push('/Profile')
+        watch: {
+			$route(){
+				this.checkLoginStatus();
+			}
+		},
+        methods: {
+            checkLoginStatus() {
+                checkLoginStatus();
+            },
+            logout() {
+                this.axios({
+                    url: "/api/user/logout",
+                    method: "get"
+                }).then(response => {
+                    if (response.data.status) {
+                        console.log(response.data.message)
+                    } else {
+                        console.log(response.data.message)
+                    }
+                    this.$router.go(0)
+                })
+            },
+            goSignUp() {
+                this.$router.push('/SignUp')
+            },
+            goLogin() {
+                this.$router.push('/Login')
+            },
+            goProfile() {
+                this.$router.push('/Profile')
+            }
         }
     }
-}
-
 </script>
 <style>
     .nav-box{
