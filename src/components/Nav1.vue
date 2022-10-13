@@ -22,7 +22,6 @@
                 <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
                 <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
             </el-menu-item>
-            <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
         </el-menu>
     </div>
     <router-view></router-view>

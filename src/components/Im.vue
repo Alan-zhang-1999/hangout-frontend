@@ -32,6 +32,8 @@
     </div>
   </template>
   <script>
+import { controlledComputed } from '@vueuse/shared';
+
   let socket;
   export default {
     name: "Im",
@@ -141,7 +143,9 @@
         this.htmlContent += html;
       },
       async init() {
-        this.userEmail = window.sessionStorage.getItem("userEmail") ? JSON.parse(window.sessionStorage.getItem("userEmail")) : ""
+        console.log(window.sessionStorage.getItem("userEmail"))
+        this.userEmail = window.sessionStorage.getItem("userEmail")
+        
         await this.axios({
             url: "/api/message/allUsers/" + this.userEmail,
             method: "get",
