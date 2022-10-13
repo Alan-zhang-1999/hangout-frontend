@@ -53,7 +53,9 @@
 		},
         methods: {
             checkLoginStatus() {
-                checkLoginStatus();
+                checkLoginStatus().then((res) => {
+                    this.loginStatus = res.loginStatus;
+                })
             },
             logout() {
                 this.axios({
