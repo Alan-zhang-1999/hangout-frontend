@@ -38,6 +38,7 @@ export default{
                     "password": this.Password
                 },
             }).then(response => {
+                window.sessionStorage.setItem("userEmail", this.email)
                 console.log(this.Password)
                 console.log(response.data)
                 this.$router.push('/Home')
