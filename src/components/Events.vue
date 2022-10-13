@@ -1,6 +1,6 @@
 <template>
     <!-- <h1>Events Page</h1> -->
-    <div class="page" style="background-color: rgb(255,247,237)">
+    <div class="page">
         <el-row>
             <el-form ref="form">
                 <el-form-item>
@@ -23,15 +23,20 @@
             <el-button type="primary" v-if="user.loginStatus" @click="getJoinedEvents">Joined</el-button>
 
         </el-row>
-        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+        <div class="show">
+            <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+
             <!-- <img src="{{ event.img}}"/> -->
-            <p>Name: {{ event.name }}</p>
-            <p>Date: {{formatDate(event.time)}}</p>
-            <p>Location: {{event.location}}</p>
+                <p>Name: {{ event.name }}</p>
+                <p>Date: {{formatDate(event.time)}}</p>
+                <p>Location: {{event.location}}</p>
+
             <!-- <p>Topic: {{event.topic}}</p>
             <p>Description: {{event.information}}</p> -->
-        </div> 
-    </div>
+            </div>
+        </div>
+        </div>
+
 
 </template>
 <script>
@@ -116,7 +121,15 @@
 </script>
 
 <style>
+    .page {
+        background-color: rgb(255,247,237);
+        padding: 20px;
+    }
+    .show {
+        overflow: hidden;
+    }
     .event-container {
+
         float: left;
 		width: 400px;
 		height: 200px;
@@ -132,8 +145,4 @@
         box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
     }
 
-    .page {
-        padding: 20px;
-        /* background-color: #EDF7FE; */
-    }
 </style>

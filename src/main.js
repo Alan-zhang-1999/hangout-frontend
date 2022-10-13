@@ -9,7 +9,16 @@ import moment from 'moment'
 
 // import Axios from 'axios'
 import axios from 'axios'
+import {
+    // create naive ui
+    create,
+    // component
+    NButton, NCard, NTabs, NTab, NTabPane, NAvatar
+} from 'naive-ui'
 
+const naive = create({
+    components: [NButton, NCard, NTabs, NTab, NTabPane,NAvatar]
+})
 // Vue.prototype.$axios = Axios
 // Axios.defaults.baseURL = "/api"
 const app = createApp(App)
@@ -19,7 +28,7 @@ for (const name in ElIcons) {
 axios.defaults.withCredentials = true
 app.config.globalProperties.axios=axios
 
-app.use(ElementPlus).use(router).mount('#app')
+app.use(ElementPlus).use(router).use(naive).mount('#app')
 
 
 

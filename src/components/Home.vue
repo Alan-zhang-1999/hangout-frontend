@@ -94,17 +94,16 @@
                 display: flex;
              
             }
-            .event-right {
-                margin-left:10px;
-                padding-left:10px;
-                align-self:center;
-                height:200px;
-                display: flex;
-                font-size:40px;
-                align-items: center;
-                justify-content: center;
-                
-            }
+    .event-right {
+        margin-left: 10px;
+        padding-left: 10px;
+        height: 200px;
+        display: flex;
+        font-size: 40px;
+        align-items: center;
+        justify-content: center;
+        align-self: center;
+    }
         .event-page {
             
             width: fit-content;

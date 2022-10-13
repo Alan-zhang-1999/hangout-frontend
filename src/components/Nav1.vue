@@ -1,20 +1,21 @@
 <template>
     <div class="nav-box" style="background-color: rgb(234,238,231)">
-        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237)" >
-            <img src="../img/logo.jpg" alt="Hangout" width="100" height="40"/>
+        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237)">
+            <img src="../img/logo.jpg" alt="Hangout" width="100" height="40" />
             <el-menu-item><router-link to="/Home">Home</router-link></el-menu-item>
             <el-menu-item><router-link to="/Group">Group</router-link></el-menu-item>
             <el-menu-item><router-link to="/Events">Events</router-link></el-menu-item>
             <el-menu-item><router-link to="/Profile">Profile</router-link></el-menu-item>
+            <el-menu-item><router-link to="/Im">Chat</router-link></el-menu-item>
             <!-- <el-menu-item><router-link to="" class="login-link" ></router-link></el-menu-item> -->
             <el-menu-item v-if="loginStatus">
                 <el-dropdown>
                     <el-avatar>user</el-avatar>
                     <template #dropdown>
-                    <el-dropdown-menu>
-                        <el-dropdown-item><el-button type="primary" @click="goProfile" class="btn-sign" size="medium">Profile</el-button></el-dropdown-item>
-                        <el-dropdown-item><el-button type="primary" @click="logout" class="btn-sign" size="medium">Logout</el-button></el-dropdown-item>
-                    </el-dropdown-menu>
+                        <el-dropdown-menu>
+                            <el-dropdown-item><el-button type="primary" @click="goProfile" class="btn-sign" size="medium">Profile</el-button></el-dropdown-item>
+                            <el-dropdown-item><el-button type="primary" @click="logout" class="btn-sign" size="medium">Logout</el-button></el-dropdown-item>
+                        </el-dropdown-menu>
                     </template>
                 </el-dropdown>
             </el-menu-item>
@@ -78,6 +79,9 @@
             },
             goProfile() {
                 this.$router.push('/Profile')
+            },
+            goChat() {
+                this.$router.push('/Im')
             }
         }
     }
