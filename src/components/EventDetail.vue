@@ -56,7 +56,7 @@
                         url: "/api/event/"+id,
                         method: "get",
                     }).then(response => {
-                        // console.log(response.data);
+                        console.log(response.data);
                         this.event = response.data;
                     })
             },

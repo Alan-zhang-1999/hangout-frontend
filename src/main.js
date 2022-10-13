@@ -76,3 +76,19 @@ export async function getUserId(email) {
 export function formatDate(date) {
 	return moment(date).format('YYYY-MM-DD HH:mm:ss')
 }
+
+export function generateFileName(prefix, extension) {
+    var date = new Date()
+    var year = date.getFullYear()
+    var month = date.getMonth() + 1
+    var day = date.getDate()
+    var hour = date.getHours()
+    var minute = date.getMinutes()
+    var second = date.getSeconds()
+    var fileName = prefix + "/" + year + pad(month)+ pad(day) + "_" + pad(hour) + pad(minute) + pad(second) + extension
+    return fileName;
+}
+
+function pad(num) {
+    return String(num).padStart(2, '0');
+}
