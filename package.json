@@ -19,7 +19,8 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-service": "~5.0.0"
+    "@vue/cli-service": "~5.0.0",
+    "naive-ui": "^2.33.5"
   },
   "browserslist": [
     "> 1%",
