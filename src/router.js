@@ -9,6 +9,7 @@ import groupdetails from "./components/groupdetail.vue"
 import EventDetail from "./components/EventDetail.vue"
 import createGroup from "./components/createGroup.vue"
 import createEvent from "./components/createEvent.vue"
+import Im from "./components/Im.vue"
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -56,6 +57,10 @@ const router = createRouter({
         {
             path: "/SignUp", 
             component: SignUp
+        },
+        {
+            path: "/Im",
+            component: Im
         }
     ]
 });

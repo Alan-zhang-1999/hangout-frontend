@@ -35,23 +35,22 @@
 
 </template>
 <script>
-    import moment from 'moment'
-    import { checkLoginStatus } from '../main.js'
+    import { checkLoginStatus, getUserId, formatDate } from '../main.js'
 
     export default{
         data(){
             return{
                 events: [],
                 keyword: "",
-                user: {}
+                user: {},
+                id: 0
             }
         },
         mounted: async function() {
-            console.log("mounted")
-            console.log(await checkLoginStatus());
             this.user = await checkLoginStatus();
-            console.log(this.user.email);
-            
+            if (this.user.loginStatus) {
+                this.id = await getUserId(this.user.email);
+            }            
             this.getEvents();
         },
         watch: {
@@ -82,7 +81,7 @@
                     url: "/api/event/all",
                     method: "get",
                 }).then(response => {
-                    this.events = response.data
+                    this.events = response.data;
                 })
             },
             getPastEvents() {
@@ -90,8 +89,7 @@
                     url: "/api/event/past",
                     method: "get",
                 }).then(response => {
-                    console.log(response.data)
-                    this.events = response.data
+                    this.events = response.data;
                 })
             },
             getCurrentEvents() {
@@ -99,22 +97,19 @@
                     url: "/api/event/current",
                     method: "get",
                 }).then(response => {
-                    console.log(response.data)
-                    this.events = response.data
+                    this.events = response.data;
                 })
             },
             getJoinedEvents() {
-                console.log(this.user.email);
                 this.axios({
-                    url: "/api/joinedevents/"+this.user.email,
+                    url: "/api/event/joined/"+this.user.email,
                     method: "get",
                 }).then(response => {
-                    console.log(response.data)
-                    this.events = response.data
+                    this.events = response.data;
                 })
             },
             formatDate(date) {
-                return moment(date).format('YYYY-MM-DD HH:mm:ss')
+                return formatDate(date)
             }
         }
     }

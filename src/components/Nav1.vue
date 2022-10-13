@@ -28,7 +28,7 @@
 </template>
 
 <script>
-
+    import { checkLoginStatus} from '../main.js'
 
     export default{
         data() {
@@ -53,27 +53,8 @@
 		},
         methods: {
             checkLoginStatus() {
-                this.axios({
-                    url: "/api/user/isLogin",
-                    method: "get",
-                }).then(response => {
-                    console.log(response.data)
-                    this.loginStatus = response.data.status
-                    if (response.data.email != null){
-                        this.axios({
-                            url: "/api/userProfile/" + response.data.email,
-                            method: "get",
-                        }).then(response => {
-                            this.background = response.data.background
-                            this.biography = response.data.biography
-                            this.bithday = response.data.bithday
-                            this.gender = response.data.gender
-                            this.job = response.data.job
-                            this.location = response.data.location
-                        })
-                    }
-                    console.log(this.loginStatus, response.data.status)
-                    
+                checkLoginStatus().then((res) => {
+                    this.loginStatus = res.loginStatus;
                 })
             },
             logout() {
@@ -81,7 +62,6 @@
                     url: "/api/user/logout",
                     method: "get"
                 }).then(response => {
-
                     if (response.data.status) {
                         console.log(response.data.message)
                     } else {
