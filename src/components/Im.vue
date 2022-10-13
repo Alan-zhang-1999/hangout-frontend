@@ -2,18 +2,30 @@
     <div style="padding: 10px; margin-bottom: 50px">
       <el-row>
         <el-col :span="4">
-          <el-card style="width: 300px; height: 300px; color: #333">
-           <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">在线用户<span style="font-size: 12px">（点击聊天气泡开始聊天）</span></div>
-            <div style="padding: 10px 0" v-for="user in users" :key="user.email">
-              <span>{{ user.username }}</span>
-              <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                 @click="chooseChatUser(user);"><ChatDotRound /></el-icon>
-              <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                 @click="chooseChatUser(user);"><ChatRound /></el-icon>
-              <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email">chatting...</span>
-            </div>
-          </el-card>
+            <el-card style="width: 300px; height: 600px; color: #333">
+                <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">Online users<span style="font-size: 12px">（click icon to chat）</span></div>
+                <div style="padding: 10px 0" v-for="user in users" :key="user.email">
+                    <span>{{ user.username }}</span>
+                    <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatDotRound /></el-icon>
+                    <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatRound /></el-icon>
+                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email">chatting...</span>
+                </div>
+
+                <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">Offline users<span style="font-size: 12px">（click icon to chat）</span></div>
+                <div style="padding: 10px 0" v-for="user in users" :key="user.email">
+                    <span>{{ user.username }}</span>
+                    <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatDotRound /></el-icon>
+                    <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatRound /></el-icon>
+                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email">chatting...</span>
+                </div>
+
+            </el-card>
         </el-col>
+          
         <el-col :span="20">
           <div style="width: 800px; margin: 0 auto; background-color: white; border-radius: 5px; box-shadow: 0px #ccc">
             <div style="text-align: center; line-height: 50px;">
