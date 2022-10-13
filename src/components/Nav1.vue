@@ -1,6 +1,6 @@
 <template>
-    <div class="nav-box">
-        <el-menu class="nav-menu" mode="horizontal" >
+    <div class="nav-box" style="background-color: rgb(234,238,231)">
+        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237)" >
             <img src="../img/logo.jpg" alt="Hangout" width="100" height="40"/>
             <el-menu-item><router-link to="/Home">Home</router-link></el-menu-item>
             <el-menu-item><router-link to="/Group">Group</router-link></el-menu-item>
@@ -103,10 +103,9 @@
     }
 </script>
 <style>
-    .nav-box{
-        position:relative;
-        
-        border:1px solid;
+    .nav-box {
+        position: relative;
+        border: 0px 0px 1px 0px solid;
         padding-left: 30px;
     }
     .nav-menu{

@@ -1,6 +1,6 @@
 <template>
     <!-- <h1>Events Page</h1> -->
-    <div class="page">
+    <div class="page" style="background-color: rgb(255,247,237)">
         <el-row>
             <el-form ref="form">
                 <el-form-item>
@@ -122,15 +122,13 @@
 
 <style>
     .event-container {
-		width: 80%;
-		height: 100px;
+        float: left;
+		width: 400px;
+		height: 200px;
+        margin:10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
-        border-radius:10px;
-        margin-top: 20px;
-        margin-bottom: 20px;
+        border-radius:10px;    
         display: block;
-        margin-left: auto;
-        margin-right: auto;
         /* background-color: white; */
 
     }
