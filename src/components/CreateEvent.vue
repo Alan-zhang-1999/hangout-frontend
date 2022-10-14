@@ -1,49 +1,43 @@
 <template>
-    <div class="page" style="background-color: rgb(255,247,237)">
-        <div class="page" style="background-color: rgb(255,247,237)">
-            <div class="container">
-                <el-form ref="form" :model="event" label-width="80px" class="eform">
-                    <el-button type="primary" @click="back">Back</el-button>
-                    <div class="c-event">
-                        <el-form-item label="Event name">
-                            <el-input v-model="event.name"></el-input>
-                            (no more than 15 words)
-                        </el-form-item>
-                        <el-form-item label="Location">
-                            <el-input v-model="event.location"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Topic">
-                            <el-input v-model="event.topic"></el-input>
-                        </el-form-item>
-                        <el-form-item label="Date">
-                            <el-col :span="11">
-                                <el-date-picker type="date" placeholder="YYYY-MM-DD" v-model="event.date1"
-                                    style="width: 100%;"></el-date-picker>
-                            </el-col>
-                            <el-col class="line" :span="2">-</el-col>
-                            <el-col :span="11">
-                                <el-time-picker placeholder="time" v-model="event.date2" style="width: 100%;">
-                                </el-time-picker>
-                            </el-col>
-                        </el-form-item>
-                        <el-form-item label="Description">
-                            <el-input type="textarea" v-model="event.information"></el-input>
-                            (At least 50 words)
-                        </el-form-item>
-                        <el-form-item label="Photos">
-                            <img src="event.url" alt="background" ref="image" id="img" />
-                            <input type="file" accept="image/*" ref="selectImage" />
-                            <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
-                        </el-form-item>
+    <div class="container">
+        <el-button type="primary" @click="back">Back</el-button>
+        <el-form ref="form" :model="event" label-width="80px" class="eform">
+            <div class="c-event">
+                <el-form-item label="Event name">
+                    <input type="text" v-model="event.name" class="textinput" />
+                </el-form-item>
+                <el-form-item label="Location">
+                    <input type="text" v-model="event.location" placeholder="" ref="address" class="textinput" />
+                </el-form-item>
+                <el-form-item label="Topic">
+                    <input type="text" v-model="event.topic" class="textinput" />
+                </el-form-item>
+                <el-form-item label="Date">
+                    <el-col :span="11">
+                        <el-date-picker type="date" placeholder="YYYY-MM-DD" v-model="event.date1" style="width: 100%;">
+                        </el-date-picker>
+                    </el-col>
+                    <el-col class="line" :span="2">-</el-col>
+                    <el-col :span="11">
+                        <el-time-picker placeholder="time" v-model="event.date2" style="width: 100%;">
+                        </el-time-picker>
+                    </el-col>
+                </el-form-item>
+                <el-form-item label="Description">
+                    <input type="textarea" v-model="event.information" class="textinput" />
+                </el-form-item>
+                <el-form-item label="Photos">
+                    <img src="event.url" alt="background" ref="image" id="img" />
+                    <input type="file" accept="image/*" ref="selectImage" />
+                    <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
+                </el-form-item>
 
-                        <el-form-item>
-                            <el-button type="primary" @click="createEvent">Create</el-button>
-                            <el-button type="primary" @click="back">Cancel</el-button>
-                        </el-form-item>
-                    </div>
-                </el-form>
+                <el-form-item>
+                    <el-button type="primary" @click="createEvent">Create</el-button>
+                    <el-button type="primary" @click="back">Cancel</el-button>
+                </el-form-item>
             </div>
-        </div>
+        </el-form>
     </div>
 </template>
 
@@ -68,7 +62,26 @@ export default {
             uploadStatus: ""
         }
     },
-    mounted: function() {
+    mounted: function () {
+        navigator.geolocation.getCurrentPosition(position => {
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const center = { lat, lng };
+            const defaultBounds = {
+                north: center.lat + 0.1,
+                south: center.lat - 0.1,
+                east: center.lng + 0.1,
+                west: center.lng - 0.1,
+            };
+            const options = {
+                bounds: defaultBounds,
+                componentRestrictions: { country: "au" },
+                fields: ["address_components", "geometry", "icon", "name"],
+                strictBounds: false,
+                types: ["establishment"],
+            };
+            const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
+        });
         this.$refs.selectImage.addEventListener('change', async () => {
             this.uploadStatus = "";
             const image = this.$refs.selectImage.files[0];
@@ -77,7 +90,6 @@ export default {
             const url = await uploadFile(this, image, fileName);
             this.event.url = url;
             this.$refs.image.src = url;
-            console.log(this.event.url);
         });
     },
     methods: {
@@ -121,32 +133,20 @@ export default {
                 }
             }).then(response => {
                 console.log(response.data)
-                this.$router.push("/event/all")
+                this.back()
             })
         }
-
     }
-
 
 }
 </script>
 <style>
-.container {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-}
-
-.eform {
-    padding: 30px;
-    position: absolute;
-}
 
 .c-event {
     position: absolute;
-    padding: 30px;
-    width: 650px;
-    padding-left: 400px;
+    width: 40%;
+    margin-left: 30%;
+    margin-right: 30%;
 }
 
 #img {
@@ -157,5 +157,22 @@ export default {
 #progress {
     width: 200px;
     height: 100px;
+}
+
+.textinput {
+    width: 500px;
+    padding: 12px 20px;
+    box-sizing: border-box;
+    border-color: #dcdfe6;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
+}
+
+img {
+    border-color: #dcdfe6;
+    border-width: 1px;
+    border-style: solid;
+    border-radius: 5px;
 }
 </style>
