@@ -74,7 +74,7 @@
         },
         methods: {
             toCreateEvent() {
-                this.$router.push('/createEvent')
+                this.$router.push('/CreateEvent')
             },
             searchEvent(keyword) {
                 this.axios({

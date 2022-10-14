@@ -73,24 +73,24 @@ export default {
             })
         },
         toCreateGroup() {
-            this.$router.push('/createGroup')
+            this.$router.push('/CreateGroup')
         },
         searchGroup(keyword) {
-                this.axios({
-                    url: "/api/group/search",
-                    method: "get",
-                    params: {
-                        "keyword": keyword
-                    }
-                }).then(response => {
-                    this.groups = response.data.related
-                    this.guessYouLike = response.data.guessYouLike
-                    console.log("search", keyword)
-                })
-            },
+            this.axios({
+                url: "/api/group/search",
+                method: "get",
+                params: {
+                    "keyword": keyword
+                }
+            }).then(response => {
+                this.groups = response.data.related
+                this.guessYouLike = response.data.guessYouLike
+                console.log("search", keyword)
+            })
+        },
         getGroupDetail(id) {
             console.log(id)
-            this.$router.push('/groupDetail/' + id)
+            this.$router.push('/GroupDetail/' + id)
         }
     }
 }
