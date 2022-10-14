@@ -29,7 +29,7 @@
 </template>
 
 <script>
-    import { checkLoginStatus} from '../main.js'
+    import { checkLoginStatus} from '../util.js'
 
     export default{
         data() {
