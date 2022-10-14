@@ -3,11 +3,9 @@
         <el-button type="primary" @click="back">Back</el-button>
         <el-button type="primary" v-if="user.loginStatus && !check" @click="joinEvent">Join</el-button>
         <el-button type="primary" v-if="user.loginStatus && check" @click="leaveEvent">Leave</el-button>
-        <!-- <el-button type="primary" v-if="user.loginStatus" @click="toggleEvent" ref="btnToggle">{{check ?  "Leave" : "Join"}}</el-button> -->
-
     </el-row>
     
-    <div class="page">
+    <div class="container">
         <p>{{event.name}}</p>
         <p>{{event.location}}</p>
         <p>{{formatDate(event.time)}}</p>

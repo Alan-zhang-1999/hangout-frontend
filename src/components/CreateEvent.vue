@@ -1,6 +1,9 @@
 <template>
     <div class="container">
-        <el-button type="primary" @click="back">Back</el-button>
+        <div style="margin: 20px;">
+            <el-button type="primary" @click="back">Back</el-button>
+        </div>
+
         <el-form ref="form" :model="event" label-width="80px" class="eform">
             <div class="c-event">
                 <el-form-item label="Event name">
@@ -17,7 +20,7 @@
                         <el-date-picker type="date" placeholder="YYYY-MM-DD" v-model="event.date1" style="width: 100%;">
                         </el-date-picker>
                     </el-col>
-                    <el-col class="line" :span="2">-</el-col>
+                    <el-col class="line" :span="2"></el-col>
                     <el-col :span="11">
                         <el-time-picker placeholder="time" v-model="event.date2" style="width: 100%;">
                         </el-time-picker>
@@ -31,12 +34,15 @@
                     <input type="file" accept="image/*" ref="selectImage" />
                     <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
                 </el-form-item>
-
                 <el-form-item>
-                    <el-button type="primary" @click="createEvent">Create</el-button>
-                    <el-button type="primary" @click="back">Cancel</el-button>
+                    <div style="margin-left: auto; margin-right: auto;">
+                        <el-button type="primary" @click="createEvent">Create</el-button>
+                        <el-button type="primary" @click="back">Cancel</el-button>
+                    </div>
+
                 </el-form-item>
             </div>
+            
         </el-form>
     </div>
 </template>
@@ -141,9 +147,7 @@ export default {
 }
 </script>
 <style>
-
 .c-event {
-    position: absolute;
     width: 40%;
     margin-left: 30%;
     margin-right: 30%;
@@ -160,7 +164,7 @@ export default {
 }
 
 .textinput {
-    width: 500px;
+    width: 100%;
     padding: 12px 20px;
     box-sizing: border-box;
     border-color: #dcdfe6;
@@ -169,10 +173,12 @@ export default {
     border-radius: 5px;
 }
 
-img {
+#img {
     border-color: #dcdfe6;
     border-width: 1px;
     border-style: solid;
     border-radius: 5px;
+    width: 100%;
 }
+
 </style>
