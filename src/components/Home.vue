@@ -4,10 +4,6 @@
         <div class="event">
             <div class="event-show">
                 <div class="event-left" >
-                    <!--<div v-for="fit in fits" :key="fit" class="block">
-                        
-                        <el-image style="width: 500px; height: 300px" :src="url" :fit="fit" />
-                    </div>-->
                     <div  v-for="item in Show1" @click="gotoEventdetail">
                         <el-image style="width: 500px; height: 300px" :src="url" :fit="fit" />
                         <h3>{{item.eid}}--{{item.name}}</h3>
@@ -257,9 +253,6 @@
                 .event-img{
                     padding:20px;
 
-                }
-                .event-describe{
-                   
                 }
     .recommend-events-right {
         height: 200px;
