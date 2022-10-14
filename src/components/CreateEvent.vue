@@ -33,6 +33,7 @@
                         <el-form-item label="Photos">
                             <img src="event.url" alt="background" ref="image" id="img" />
                             <input type="file" accept="image/*" ref="selectImage" />
+                            <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
                         </el-form-item>
 
                         <el-form-item>
@@ -62,15 +63,18 @@ export default {
                 date2: "",
                 information: "",
                 url: ""
-            }
+            },
+            percentage: 0,
+            uploadStatus: ""
         }
     },
     mounted: function() {
         this.$refs.selectImage.addEventListener('change', async () => {
+            this.uploadStatus = "";
             const image = this.$refs.selectImage.files[0];
             const ext = "." + image.type.replace(/(.*)\//g, '');
             const fileName = generateFileName("background", ext);
-            const url = await uploadFile(image, fileName);
+            const url = await uploadFile(this, image, fileName);
             this.event.url = url;
             this.$refs.image.src = url;
             console.log(this.event.url);
@@ -131,5 +135,10 @@ export default {
 #img {
     width: 400px;
     height: 250px;
+}
+
+#progress {
+    width: 200px;
+    height: 100px;
 }
 </style>

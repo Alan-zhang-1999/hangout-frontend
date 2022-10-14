@@ -1,8 +1,7 @@
 import { initializeApp } from "firebase/app";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import * as imageConversion from 'image-conversion';
+import { getStorage, ref, getDownloadURL, uploadBytesResumable } from "firebase/storage";
+import * as imageConversion from "image-conversion";
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyA7DsWqnpov93rbdt1WWRv9SIyDKZQkc8E",
     authDomain: "elec5619-e69f2.firebaseapp.com",
@@ -16,14 +15,21 @@ const app = initializeApp(firebaseConfig);
 
 const storage = getStorage(app);
 
-export async function uploadFile(file, fileName) {
+export async function uploadFile(self, file, fileName) {
     const temp = await imageConversion.compress(file, 0.8);
     const storageRef = ref(storage, fileName);
-    return await uploadBytes(storageRef, temp).then(async () => {
-        return await getDownloadURL(storageRef).then(url => {
-            return url;
+    const uploadTask = uploadBytesResumable(storageRef, temp);
+    return await new Promise((resolve, reject) => {
+        uploadTask.on('state_changed',  (snapshot) => {
+            self.percentage = ((snapshot.bytesTransferred / snapshot.totalBytes) * 100).toFixed();
+            // console.log('Upload is ' + self.percentage + '% done');
+        }, (error) => {
+            self.uploadStatus = "exception";
+            reject(error);
+        }, async () => {
+            self.uploadStatus = "success";
+            resolve(await getDownloadURL(uploadTask.snapshot.ref));
         });
     });
 
 }
-
