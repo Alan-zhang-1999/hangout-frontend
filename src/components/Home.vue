@@ -74,7 +74,7 @@
     const fits = [ 'contain',]
     const url =
         'https://img.redbull.com/images/c_crop,w_5122,h_2561,x_0,y_2956,f_auto,q_auto/c_scale,w_1200/redbullcom/2019/06/03/83ddcec2-b607-4def-a965-abb0b94fa412/how-to-take-indoor-climbing-outdoors'
-
+    
 </script>
 
 <style scoped>
