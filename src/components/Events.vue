@@ -23,14 +23,31 @@
             <el-button type="primary" v-if="user.loginStatus" @click="getJoinedEvents">Joined</el-button>
 
         </el-row>
-        <div class="show">
+        <div class="show" v-if="events.length != 0">
             <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+            <!-- <img src="{{ event.img}}"/> -->
                 <p>Name: {{ event.name }}</p>
                 <p>Date: {{formatDate(event.time)}}</p>
                 <p>Location: {{event.location}}</p>
+
+            <!-- <p>Topic: {{event.topic}}</p>
+            <p>Description: {{event.information}}</p> -->
             </div>
         </div>
-    </div>
+        <div class="show" v-if="guessYouLike.length != 0">
+            <h2>Guess You Like</h2>
+            <div v-for="event in guessYouLike" class="event-container" @click="getEventDetail(event.id)">
+            <!-- <img src="{{ event.img}}"/> -->
+                <p>Name: {{ event.name }}</p>
+                <p>Date: {{formatDate(event.time)}}</p>
+                <p>Location: {{event.location}}</p>
+
+            <!-- <p>Topic: {{event.topic}}</p>
+            <p>Description: {{event.information}}</p> -->
+            </div>
+        </div>
+        </div>
+
 
 
 </template>
@@ -41,6 +58,7 @@
         data() {
             return {
                 events: [],
+                guessYouLike: [],
                 keyword: "",
                 user: {},
                 id: 0
@@ -70,7 +88,8 @@
                         "keyword": this.keyword
                     }
                 }).then(response => {
-                    this.events = response.data
+                    this.events = response.data.related
+                    this.guessYouLike = response.data.guessYouLike
                 })
             },
             getEventDetail(id) {
@@ -116,29 +135,26 @@
 </script>
 
 <style>
-.page {
-    background-color: rgb(255, 247, 237);
-    padding: 20px;
-}
+    .page {
+        background-color: rgb(255,247,237);
+        padding: 20px;
+    }
+    .show {
+        overflow: hidden;
+    }
+    .event-container {
 
-.show {
-    overflow: hidden;
-}
+        float: left;
+		width: 400px;
+		height: 200px;
+        margin:10px;
+        box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
+        border-radius:10px;    
+        display: block;
+        /* background-color: white; */
+    }
+    .show {
+        overflow: hidden;
+    }
 
-.event-container {
-
-    float: left;
-    width: 400px;
-    height: 200px;
-    margin: 10px;
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
-    border-radius: 10px;
-    display: block;
-    /* background-color: white; */
-
-}
-
-.event-container:hover {
-    box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
-}
 </style>
