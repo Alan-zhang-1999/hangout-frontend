@@ -42,21 +42,19 @@ export default{
                     window.sessionStorage.setItem("userEmail", this.email)
                     this.$router.push("/Home");
                     this.$message({
-                        message: 'Login successfully',
+                        message: response.data.message,
                         type: 'success',
+                        duration: 1500,
                         offset: 80
                     });
                 } else {
                     this.$message({
-                        message: 'Login failed',
+                        message: response.data.message,
                         type: 'error',
+                        duration: 1500,
                         offset: 80
                     });
                 }
-                // window.sessionStorage.setItem("userEmail", this.email)
-                // console.log(this.Password)
-                // console.log(response.data)
-                // this.$router.push('/Home')
             })
         }
     }
