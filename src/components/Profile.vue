@@ -19,9 +19,9 @@
                 </div>
             </div>
             <div class="follow">
-                <el-button type="info">Follower</el-button>
-                <el-button type="info">Following</el-button>
-                <el-button type="info">Interests</el-button>
+                <el-button type="info">Follower {{followerNum}}</el-button>
+                <el-button type="info">Following {{followNum}}</el-button>
+                <el-button type="info">Interests </el-button>
             </div>
             <div class="buttons">
                
@@ -105,7 +105,9 @@
                 events: [],
                 keyword: "",
                 user: {},
-                id: 0
+                eventId: 0,
+                followNum: "",
+                followerNum: "",
             }
         },
         mounted: async function () {
@@ -114,10 +116,14 @@
                 this.id = await getUserId(this.user.email);
             }
             this.getEvents();
+            this.getFollowNum();
+            this.getFollowerNum();
         },
         watch: {
             $route() {
                 this.getEvents();
+                this.getFollowNum();
+                this.getFollowerNum();
             }
         },
         methods: {
@@ -135,8 +141,8 @@
                     this.events = response.data
                 })
             },
-            getEventDetail(id) {
-                this.$router.push('/eventdetail/' + id)
+            getEventDetail(eventId) {
+                this.$router.push('/eventdetail/' + eventId)
             },
             getEvents() {
                 this.axios({
@@ -144,6 +150,22 @@
                     method: "get",
                 }).then(response => {
                     this.events = response.data;
+                })
+            },
+            getFollowNum() {
+                this.axios({
+                    url: "/api/follow/followCounts/"+this.id,
+                    method: "get",
+                }).then(response => {
+                    this.followNum = response.data;
+                })
+            },
+            getFollowerNum() {
+                this.axios({
+                    url: "/api/follow/followerCounts/"+this.id,
+                    method: "get",
+                }).then(response => {
+                    this.followerNum = response.data;
                 })
             },
             getPastEvents() {

@@ -1,7 +1,7 @@
 <template>
     <div class="page" style="background-color: rgb(255,247,237)">
         <meta name="referrer" content="no-referrer">
-        <el-row>
+        <!-- <el-row>
             <el-form ref="form">
                 <el-form-item>
                     <el-input placeholder="search group" v-model="email">
@@ -10,6 +10,21 @@
                 <el-button icon="el-icon-search" circle></el-button>
                 <el-button type="warning" @click="toCreateGroup" round>Create Group</el-button>
             </el-form>
+        </el-row> -->
+        <el-row>
+            <el-form ref="form">
+                <el-form-item>
+                    <el-input placeholder="search group" v-model="keyword">
+                    </el-input>
+                </el-form-item>  
+                
+            </el-form>
+            <el-button type="primary" @click="serachGroup">Search&nbsp;
+                <el-icon :size="size" :color="color">
+                    <search />
+                </el-icon></el-button>
+            <el-button type="primary" @click="toCreateGroup">Create Group</el-button>
+            
         </el-row>
         <div>
             <article v-for="group in groups" class="gg">
@@ -19,6 +34,23 @@
                 <p>{{group.location}}</p></p>
             </article>
         </div>
+        <div class="show" v-if="groups.length != 0">
+            <div v-for="group in groups" class="event-container" @click="getEventDetail(event.id)">
+                <p><img :src="group.backgroundImage" />
+                <p>{{group.name }}</p>
+                <p>{{group.information}}</p>
+                <p>{{group.location}}</p></p>
+            </div>
+        </div>
+        <div class="show" v-if="guessYouLike.length != 0">
+            <h2>Guess You Like</h2>
+            <div v-for="group in guessYouLike" class="event-container" @click="getEventDetail(event.id)">
+                <p><img :src="group.backgroundImage" />
+                <p>{{group.name }}</p>
+                <p>{{group.information}}</p>
+                <p>{{group.location}}</p></p>
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -26,8 +58,10 @@
     export default{
         data(){
             return{
-                newgroup:"",
-                groups: []
+                newgroup: "",
+                keyword: "",
+                groups: [],
+                guessYouLike: [],
             }
         },
         mounted: function() {
@@ -51,7 +85,19 @@
             },
             toCreateGroup() {
                 this.$router.push('/createGroup')
-            }
+            },
+            serachGroup() {
+                this.axios({
+                    url: "/api/group/search",
+                    method: "get",
+                    params: {
+                        "keyword": this.keyword
+                    }
+                }).then(response => {
+                    this.groups = response.data.related
+                    this.guessYouLike = response.data.guessYouLike
+                })
+            },
         }
     }
 </script>
