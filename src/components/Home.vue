@@ -258,9 +258,6 @@
                     padding:20px;
 
                 }
-                .event-describe{
-                   
-                }
     .recommend-events-right {
         height: 200px;
         width: 400px;

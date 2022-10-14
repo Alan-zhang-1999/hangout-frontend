@@ -6,15 +6,15 @@
                 <el-form-item>
                     <el-input placeholder="search event" v-model="keyword">
                     </el-input>
-                </el-form-item>  
-                
+                </el-form-item>
             </el-form>
             <el-button type="primary" @click="serachEvent">Search&nbsp;
                 <el-icon :size="size" :color="color">
                     <search />
-                </el-icon></el-button>
+                </el-icon>
+            </el-button>
             <el-button type="primary" @click="toCreateEvent">Create Event</el-button>
-            
+
         </el-row>
         <el-row>
             <el-button type="primary" @click="getEvents">All</el-button>
@@ -49,13 +49,14 @@
         </div>
 
 
+
 </template>
 <script>
     import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
-    export default{
-        data(){
-            return{
+    export default {
+        data() {
+            return {
                 events: [],
                 guessYouLike: [],
                 keyword: "",
@@ -63,20 +64,20 @@
                 id: 0
             }
         },
-        mounted: async function() {
+        mounted: async function () {
             this.user = await checkLoginStatus();
             if (this.user.loginStatus) {
                 this.id = await getUserId(this.user.email);
-            }            
+            }
             this.getEvents();
         },
         watch: {
-			$route(){
-				this.getEvents();
-			}
-		},
-        methods:{
-            toCreateEvent(){
+            $route() {
+                this.getEvents();
+            }
+        },
+        methods: {
+            toCreateEvent() {
                 this.$router.push('/createEvent')
             },
             serachEvent() {
@@ -92,9 +93,9 @@
                 })
             },
             getEventDetail(id) {
-                this.$router.push('/eventdetail/'+id)
+                this.$router.push('/eventdetail/' + id)
             },
-            getEvents(){
+            getEvents() {
                 this.axios({
                     url: "/api/event/all",
                     method: "get",
@@ -120,7 +121,7 @@
             },
             getJoinedEvents() {
                 this.axios({
-                    url: "/api/event/joined/"+this.user.email,
+                    url: "/api/event/joined/" + this.user.email,
                     method: "get",
                 }).then(response => {
                     this.events = response.data;
@@ -151,11 +152,9 @@
         border-radius:10px;    
         display: block;
         /* background-color: white; */
-
     }
-    
-    .event-container:hover {
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
+    .show {
+        overflow: hidden;
     }
 
 </style>
