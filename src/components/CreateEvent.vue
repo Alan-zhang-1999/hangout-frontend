@@ -49,7 +49,7 @@
 
 <script>
 import { uploadFile } from '../storage.js'
-import { generateFileName } from '../main.js'
+import { generateFileName } from '../util.js'
 
 
 export default {

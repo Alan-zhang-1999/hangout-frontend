@@ -19,8 +19,8 @@
 </template>
 
 <script>
-// import axios from 'axios';
-// axios.defaults.withCredentials = true
+// import Dialog from './Dialog.vue'
+
 export default{
     data() {
         return {
@@ -28,6 +28,7 @@ export default{
             Password: ""
         }
     },
+
     methods:{
         onSubmit() {
             this.axios( {

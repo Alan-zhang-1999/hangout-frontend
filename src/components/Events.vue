@@ -40,7 +40,7 @@
 
 </template>
 <script>
-    import { checkLoginStatus, getUserId, formatDate } from '../main.js'
+    import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
     export default{
         data(){
