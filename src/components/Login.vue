@@ -19,7 +19,6 @@
 </template>
 
 <script>
-// import Dialog from './Dialog.vue'
 
 export default{
     data() {
@@ -39,10 +38,25 @@ export default{
                     "password": this.Password
                 },
             }).then(response => {
-                window.sessionStorage.setItem("userEmail", this.email)
-                console.log(this.Password)
-                console.log(response.data)
-                this.$router.push('/Home')
+                if (response.data.status) {
+                    window.sessionStorage.setItem("userEmail", this.email)
+                    this.$router.push("/Home");
+                    this.$message({
+                        message: 'Login successfully',
+                        type: 'success',
+                        offset: 80
+                    });
+                } else {
+                    this.$message({
+                        message: 'Login failed',
+                        type: 'error',
+                        offset: 80
+                    });
+                }
+                // window.sessionStorage.setItem("userEmail", this.email)
+                // console.log(this.Password)
+                // console.log(response.data)
+                // this.$router.push('/Home')
             })
         }
     }

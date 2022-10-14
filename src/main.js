@@ -5,8 +5,6 @@ import router from './router.js'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
 import * as ElIcons from '@element-plus/icons-vue'
-
-// import Axios from 'axios'
 import axios from 'axios'
 import {
     // create naive ui
