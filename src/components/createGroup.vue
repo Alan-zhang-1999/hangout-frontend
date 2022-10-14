@@ -47,6 +47,7 @@
 </template>
 
 <script>
+import { checkLoginStatus } from '../util.js'
 
 export default{
     data(){
