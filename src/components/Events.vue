@@ -1,6 +1,5 @@
 <template>
-    <!-- <h1>Events Page</h1> -->
-    <div class="page">
+    <div class="container">
         <el-row>
             <el-form ref="form">
                 <el-form-item>
@@ -25,25 +24,18 @@
         </el-row>
         <div class="show" v-if="events.length != 0">
             <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-            <!-- <img src="{{ event.img}}"/> -->
                 <p>Name: {{ event.name }}</p>
                 <p>Date: {{formatDate(event.time)}}</p>
                 <p>Location: {{event.location}}</p>
-
-            <!-- <p>Topic: {{event.topic}}</p>
-            <p>Description: {{event.information}}</p> -->
             </div>
         </div>
         <div class="show" v-if="guessYouLike.length != 0">
             <h2>Guess You Like</h2>
             <div v-for="event in guessYouLike" class="event-container" @click="getEventDetail(event.id)">
-            <!-- <img src="{{ event.img}}"/> -->
                 <p>Name: {{ event.name }}</p>
                 <p>Date: {{formatDate(event.time)}}</p>
                 <p>Location: {{event.location}}</p>
 
-            <!-- <p>Topic: {{event.topic}}</p>
-            <p>Description: {{event.information}}</p> -->
             </div>
         </div>
         </div>
@@ -135,10 +127,6 @@
 </script>
 
 <style>
-    .page {
-        background-color: rgb(255,247,237);
-        padding: 20px;
-    }
     .show {
         overflow: hidden;
     }
