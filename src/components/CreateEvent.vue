@@ -91,6 +91,23 @@ export default {
             return dateAndTime
         },
         createEvent() {
+            if (this.event.name.length == 0 || this.event.location.length == 0 || this.event.topic.length == 0 || this.event.date1.length == 0 || this.event.date2.length == 0 || this.event.information.length == 0) {
+                this.$message({
+                    message: 'Please fill in all the blanks',
+                    type: 'error',
+                    duration: 1500,
+                    offset: 80
+                });
+                return;
+            } else if (this.event.url.length == 0) {
+                this.$message({
+                    message: 'Please upload a background image for your event',
+                    type: 'error',
+                    duration: 1500,
+                    offset: 80
+                });
+                return;
+            }
             this.axios({
                 url: "/api/event/create",
                 method: "post",
@@ -104,7 +121,7 @@ export default {
                 }
             }).then(response => {
                 console.log(response.data)
-                this.back()
+                this.$router.push("/event/all")
             })
         }
 

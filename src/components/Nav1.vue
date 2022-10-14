@@ -1,13 +1,14 @@
 <template>
     <div class="nav-box" style="background-color: rgb(234,238,231)">
-        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237)">
-            <img src="../img/logo.jpg" alt="Hangout" width="100" height="40" />
-            <el-menu-item><router-link to="/Home">Home</router-link></el-menu-item>
-            <el-menu-item><router-link to="/Group">Group</router-link></el-menu-item>
-            <el-menu-item><router-link to="/Events">Events</router-link></el-menu-item>
-            <el-menu-item><router-link to="/Profile">Profile</router-link></el-menu-item>
-            <el-menu-item><router-link to="/Im">Chat</router-link></el-menu-item>
-            <!-- <el-menu-item><router-link to="" class="login-link" ></router-link></el-menu-item> -->
+        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237); text-decoration: none; color: inherit;">
+            <div style="padding: 0 20px 0 20px; margin-top: 10px">
+                <img src="../img/logo.png" alt="Hangout" width="100" height="40" />
+            </div>
+            <el-menu-item><router-link style="text-decoration: none;" to="/Home">Home</router-link></el-menu-item>
+            <el-menu-item><router-link style="text-decoration: none;" to="/Group">Group</router-link></el-menu-item>
+            <el-menu-item><router-link style="text-decoration: none;" to="/Events">Events</router-link></el-menu-item>
+            <el-menu-item><router-link style="text-decoration: none;" to="/Profile">Profile</router-link></el-menu-item>
+            <el-menu-item><router-link style="text-decoration: none;" to="/Im">Chat</router-link></el-menu-item>
             <el-menu-item v-if="loginStatus">
                 <el-dropdown>
                     <el-avatar>user</el-avatar>
@@ -90,11 +91,11 @@
     .nav-box {
         position: relative;
         border: 0px 0px 1px 0px solid;
-        padding-left: 30px;
+        /* padding-left: 30px; */
     }
     .nav-menu{
         margin:10px;
-        padding-top: 10px;
+        /* padding-top: 10px; */
         padding-left: 20px;
     }
     .login-link{
