@@ -1,109 +1,163 @@
 <template>
     <div class="nav-box" style="background-color: rgb(234,238,231)">
-        <el-menu class="nav-menu" mode="horizontal" style="background-color: rgb(255,247,237); text-decoration: none; color: inherit;">
-            <div style="padding: 0 20px 0 20px; margin-top: 10px">
+        <el-menu class="nav-menu" mode="horizontal"
+            style="background-color: rgb(255,247,237); text-decoration: none; color: inherit;">
+            <div style="padding: 0 50px 0 50px; margin-top: 10px">
                 <img src="../img/logo.png" alt="Hangout" width="100" height="40" />
             </div>
-            <el-menu-item><router-link style="text-decoration: none;" to="/Home">Home</router-link></el-menu-item>
-            <el-menu-item><router-link style="text-decoration: none;" to="/Group">Group</router-link></el-menu-item>
-            <el-menu-item><router-link style="text-decoration: none;" to="/Events">Events</router-link></el-menu-item>
-            <el-menu-item><router-link style="text-decoration: none;" to="/Profile">Profile</router-link></el-menu-item>
-            <el-menu-item><router-link style="text-decoration: none;" to="/Im">Chat</router-link></el-menu-item>
-            <el-menu-item v-if="loginStatus">
-                <el-dropdown>
-                    <el-avatar>user</el-avatar>
-                    <template #dropdown>
-                        <el-dropdown-menu>
-                            <el-dropdown-item><el-button type="primary" @click="goProfile" class="btn-sign" size="medium">Profile</el-button></el-dropdown-item>
-                            <el-dropdown-item><el-button type="primary" @click="logout" class="btn-sign" size="medium">Logout</el-button></el-dropdown-item>
-                        </el-dropdown-menu>
-                    </template>
-                </el-dropdown>
-            </el-menu-item>
-            <el-menu-item class="bb" v-else>
-                <el-button type="primary" @click="goLogin" class="btn-sign" size="medium">Login</el-button>
-                <el-button type="primary" @click="goSignUp" class="btn-sign" size="medium">SignUp</el-button>
-            </el-menu-item>
+            <el-row>
+                <el-menu-item>
+                    <router-link style="text-decoration: none; color: black;" to="/Home">Home</router-link>
+                </el-menu-item>
+                <el-menu-item>
+                    <router-link style="text-decoration: none; color: black;" to="/Group/-">Group</router-link>
+                </el-menu-item>
+                <el-menu-item>
+                    <router-link style="text-decoration: none; color: black;" to="/Events/-">Events</router-link>
+                </el-menu-item>
+                <el-menu-item>
+                    <el-input v-model="input_text" placeholder="input_text" class="input-with-select" style="width: 500px">
+                        <template #prepend>
+                            <el-select v-model="select" placeholder="select" style="width: 100px">
+                                <el-option label="Group" value="Group" />
+                                <el-option label="Event" value="Event" />
+                            </el-select>
+                        </template>
+                        <template #append>
+                            <el-button @click="search"><el-icon><Search color="#409EFF"/></el-icon></el-button>
+                        </template>
+                    </el-input>
+                </el-menu-item>
+            </el-row>
+            <el-row v-if="loginStatus">
+                <el-menu-item>
+                    <el-dropdown>
+                        <el-avatar>{{username.slice(0, 3)}}</el-avatar>
+                        <template #dropdown>
+                            <el-dropdown-menu>
+                                <el-menu-item>
+                                    <router-link style="text-decoration: none; color: black;" to="/Im">Chat
+                                    </router-link>
+                                </el-menu-item>
+                                <el-menu-item>
+                                    <router-link style="text-decoration: none; color: black;" to="/Profile">Profile
+                                    </router-link>
+                                </el-menu-item>
+                                <el-dropdown-item>
+                                    <i type="primary" @click="logout" class="btn-sign" size="medium">Logout
+                                    </i>
+                                </el-dropdown-item>
+                            </el-dropdown-menu>
+                        </template>
+                    </el-dropdown>
+                </el-menu-item>
+            </el-row>
+            <el-row type="flex" justify="end" v-else>
+                <el-menu-item>
+                    <router-link style="text-decoration: none; color: black;" to="/Login">Login</router-link>
+                </el-menu-item>
+                <el-menu-item>
+                    <router-link style="text-decoration: none; color: black;" to="/SignUp">SignUp</router-link>
+                </el-menu-item>
+            </el-row>
         </el-menu>
     </div>
     <router-view></router-view>
 </template>
 
 <script>
-    import { checkLoginStatus} from '../util.js'
-
-    export default{
-        data() {
-            return {
-                loginStatus: false,
-                background: "",
-                biography: "",
-                bithday: "",
-                gender: "",
-                job: "",
-                location: "",
-            }
-        },
-        name: "nav1",
-        mounted: function() {
+import { checkLoginStatus } from '../util.js'
+import { Search } from '@element-plus/icons-vue'
+export default {
+    data() {
+        return {
+            input_text: "",
+            select: "",
+            loginStatus: false,
+            background: "",
+            biography: "",
+            bithday: "",
+            gender: "",
+            job: "",
+            location: "",
+            username: "",
+        }
+    },
+    name: "nav1",
+    mounted: function () {
+        this.checkLoginStatus();
+    },
+    watch: {
+        $route() {
             this.checkLoginStatus();
+        }
+    },
+    methods: {
+        checkLoginStatus() {
+            checkLoginStatus().then((res) => {
+                this.loginStatus = res.loginStatus;
+                this.username = res.username;
+            })
         },
-        watch: {
-			$route(){
-				this.checkLoginStatus();
-			}
-		},
-        methods: {
-            checkLoginStatus() {
-                checkLoginStatus().then((res) => {
-                    this.loginStatus = res.loginStatus;
-                })
-            },
-            logout() {
-                this.axios({
-                    url: "/api/user/logout",
-                    method: "get"
-                }).then(response => {
-                    if (response.data.status) {
-                        console.log(response.data.message)
-                    } else {
-                        console.log(response.data.message)
-                    }
-                    this.$router.go(0)
-                })
-            },
-            goSignUp() {
-                this.$router.push('/SignUp')
-            },
-            goLogin() {
-                this.$router.push('/Login')
-            },
-            goProfile() {
-                this.$router.push('/Profile')
-            },
-            goChat() {
-                this.$router.push('/Im')
+        search() {
+            if(this.select == "Group") {
+                this.$router.push("/Group/" + this.input_text)
+            } else {
+                this.$router.push("/Events/" + this.input_text)
             }
+        },
+        logout() {
+            this.axios({
+                url: "/api/user/logout",
+                method: "get"
+            }).then(response => {
+                if (response.data.status) {
+                    console.log(response.data.message)
+                } else {
+                    console.log(response.data.message)
+                }
+                this.$router.go(0)
+            })
+        },
+        goSignUp() {
+            this.$router.push('/SignUp')
+        },
+        goLogin() {
+            this.$router.push('/Login')
+        },
+        goProfile() {
+            this.$router.push('/Profile')
+        },
+        goChat() {
+            this.$router.push('/Im')
         }
     }
+}
 </script>
 <style>
-    .nav-box {
-        position: relative;
-        border: 0px 0px 1px 0px solid;
-        /* padding-left: 30px; */
-    }
-    .nav-menu{
-        margin:10px;
-        /* padding-top: 10px; */
-        padding-left: 20px;
-    }
-    .login-link{
-        position: relative;
-        padding-left:800px;
-    }
-    .bb{
-        position: relative;
-        padding-top: 10px;
-    }
+.nav-box {
+    position: relative;
+    border: 0px 0px 1px 0px solid;
+    /* padding-left: 30px; */
+}
+
+.nav-menu {
+    margin: 10px;
+    /* padding-top: 10px; */
+    padding-left: 20px;
+}
+
+.login-link {
+    position: relative;
+    padding-left: 800px;
+}
+
+.bb {
+    position: relative;
+    padding-top: 10px;
+}
+
+.input-with-select .el-input-group__prepend {
+  background-color: var(--el-fill-color-blank);
+}
 </style>
