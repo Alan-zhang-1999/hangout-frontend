@@ -16,7 +16,7 @@
     </div>
 </template>
 <script>
-    import { checkLoginStatus, getUserId, formatDate } from '../main.js'
+    import { checkLoginStatus, getUserId, formatDate } from '../util.js'
     export default {
         data(){
             return{
@@ -56,7 +56,7 @@
                         url: "/api/event/"+id,
                         method: "get",
                     }).then(response => {
-                        // console.log(response.data);
+                        console.log(response.data);
                         this.event = response.data;
                     })
             },

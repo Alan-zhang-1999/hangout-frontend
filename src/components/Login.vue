@@ -19,8 +19,7 @@
 </template>
 
 <script>
-// import axios from 'axios';
-// axios.defaults.withCredentials = true
+
 export default{
     data() {
         return {
@@ -28,6 +27,7 @@ export default{
             Password: ""
         }
     },
+
     methods:{
         onSubmit() {
             this.axios( {
@@ -38,10 +38,23 @@ export default{
                     "password": this.Password
                 },
             }).then(response => {
-                window.sessionStorage.setItem("userEmail", this.email)
-                console.log(this.Password)
-                console.log(response.data)
-                this.$router.push('/Home')
+                if (response.data.status) {
+                    window.sessionStorage.setItem("userEmail", this.email)
+                    this.$router.push("/Home");
+                    this.$message({
+                        message: response.data.message,
+                        type: 'success',
+                        duration: 1500,
+                        offset: 80
+                    });
+                } else {
+                    this.$message({
+                        message: response.data.message,
+                        type: 'error',
+                        duration: 1500,
+                        offset: 80
+                    });
+                }
             })
         }
     }

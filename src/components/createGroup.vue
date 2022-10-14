@@ -14,7 +14,7 @@
                 <el-input v-model="group.topic"></el-input>
             </el-form-item> -->
             <el-form-item label="Information(Describe your group)">
-                <el-input type="textarea" v-model="group.desc"></el-input>
+                <el-input type="textarea" v-model="group.information"></el-input>
                 (At least 50 words)
             </el-form-item>
             <!-- <el-form-item label="Group size">
@@ -69,9 +69,9 @@ export default{
                 method: "post",
                 data: {
                     "name": this.group.name,
-                    "location": this.group.laction,
+                    "location": this.group.location,
                     "information": this.group.information,
-                    "backgroundImage": this.backgroundImage
+                    "backgroundImage": this.group.backgroundImage
                 }
             }).then(response => {
                 console.log(response.data.message)

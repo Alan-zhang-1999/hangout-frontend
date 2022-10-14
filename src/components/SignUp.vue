@@ -1,7 +1,7 @@
 <template>
     <div class="signup-box">
         <el-form ref="form" :model="form" label-width="60px" class = "signup-form">
-            <el-form-item label="username">
+            <el-form-item label="Username">
                 <el-input v-model="username"></el-input>
             </el-form-item>
             <el-form-item label="Password">
@@ -37,7 +37,13 @@
                     }
                 }).then(response => {
                     console.log(response.data)
-                    if (response.data.status == true) {
+                    if (response.data.status) {
+                        this.$message({
+                            message: response.data.message,
+                            type: 'success',
+                            duration: 1500,
+                            offset: 80
+                        });
                         this.axios({
                             url: "/api/login",
                             method: "post",
@@ -45,10 +51,16 @@
                                 "email": this.email,
                                 "password": this.password
                             }
-                        }).then(response => {
-                            console.log(response.data)
+                        }).then(() => {
                             this.$router.push('/Home')
                         })
+                    } else {
+                        this.$message({
+                            message: response.data.message,
+                            type: 'error',
+                            duration: 1500,
+                            offset: 80
+                        });
                     }
                 })
             }
