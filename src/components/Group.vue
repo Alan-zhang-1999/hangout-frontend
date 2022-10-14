@@ -8,7 +8,7 @@
                 </el-form-item>
 
             </el-form>
-            <el-button type="primary" @click="serachGroup">Search&nbsp;
+            <el-button type="primary" @click="searchGroup(keyword)">Search&nbsp;
                 <el-icon :size="size" :color="color">
                     <search />
                 </el-icon>
@@ -83,9 +83,46 @@ export default {
                 this.guessYouLike = response.data.guessYouLike
             })
         },
-        getGroupDetail(id) {
-            console.log(id)
-            this.$router.push('/groupDetail/' + id)
+        name: "Group",
+        watch: {
+			$route() {
+                if (this.$route.params.input_text!='-'){
+                    this.searchGroup(this.$route.params.input_text);
+                } else {
+                    this.loadAllGroups();
+                }
+            }
+		},
+        methods:{
+            loadAllGroups() {
+                this.axios({
+                    url: "/api/showGroups",
+                    method: "get"
+                }).then(response => {
+                    this.groups = response.data;
+                    console.log(response.data)
+                })
+            },
+            toCreateGroup() {
+                this.$router.push('/createGroup')
+            },
+            searchGroup(keyword) {
+                this.axios({
+                    url: "/api/group/search",
+                    method: "get",
+                    params: {
+                        "keyword": keyword
+                    }
+                }).then(response => {
+                    this.groups = response.data.related
+                    this.guessYouLike = response.data.guessYouLike
+                    console.log("search", keyword)
+                })
+            },
+            getGroupDetail(id) {
+                console.log(id)
+                this.$router.push('/groupDetail/' + id)
+            }
         }
     }
 }

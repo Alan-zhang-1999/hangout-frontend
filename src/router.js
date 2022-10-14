@@ -23,11 +23,11 @@ const router = createRouter({
             component: Home 
         },
         { 
-            path: "/Group",
+            path: "/Group/:input_text",
             component: Group 
         },
         { 
-            path: "/Events",
+            path: "/Events/:input_text",
             component: Event 
         },
         { 

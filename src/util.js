@@ -5,6 +5,7 @@ export async function checkLoginStatus() {
     var data = {
         loginStatus: false,
 		id: 0,
+        username: "",
 		email: "",
         background: "",
         biography: "",
@@ -20,9 +21,10 @@ export async function checkLoginStatus() {
         return response.data;
     });    
 	data.loginStatus = response.status;
-    if (response.email != null) {
+    if (response.status) {
 		data.email = response.email;
-		// console.log(data.email);
+        data.username = response.username;
+		console.log("username", data.username);
         const res =  await axios({
             url: "/api/userProfile/" + response.email,
             method: "get",

@@ -7,7 +7,7 @@
                     </el-input>
                 </el-form-item>
             </el-form>
-            <el-button type="primary" @click="serachEvent">Search&nbsp;
+            <el-button type="primary" @click="searchEvent(keyword);">Search&nbsp;
                 <el-icon :size="size" :color="color">
                     <search />
                 </el-icon>
@@ -65,21 +65,26 @@
         },
         watch: {
             $route() {
-                this.getEvents();
+                if (this.$route.params.input_text!='-'){
+                    this.searchEvent(this.$route.params.input_text);
+                } else {
+                    this.getEvents();
+                }
             }
         },
         methods: {
             toCreateEvent() {
                 this.$router.push('/createEvent')
             },
-            serachEvent() {
+            searchEvent(keyword) {
                 this.axios({
                     url: "/api/event/search",
                     method: "get",
                     params: {
-                        "keyword": this.keyword
+                        "keyword": keyword
                     }
                 }).then(response => {
+                    console.log("search", keyword)
                     this.events = response.data.related
                     this.guessYouLike = response.data.guessYouLike
                 })
