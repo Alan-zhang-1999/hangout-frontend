@@ -16,7 +16,7 @@
                     <router-link style="text-decoration: none; color: black;" to="/Events/-">Events</router-link>
                 </el-menu-item>
                 <el-menu-item>
-                    <el-input v-model="input_text" placeholder="Search" class="input-with-select" style="width: 500px">
+                    <el-input clearable v-model="input_text" placeholder="Search" class="input-with-select" style="width: 500px">
                         <template #prepend>
                             <el-select v-model="select" placeholder="select" style="width: 100px">
                                 <el-option label="Group" value="Group" />
@@ -116,6 +116,7 @@ export default {
             } else {
                 this.$router.push("/Events/" + this.input_text)
             }
+            this.input_text = "";
         },
         logout() {
             this.axios({

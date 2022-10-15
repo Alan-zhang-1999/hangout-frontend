@@ -3,7 +3,7 @@
         <el-row>
             <el-form ref="form">
                 <el-form-item>
-                    <el-input placeholder="search event" v-model="keyword">
+                    <el-input clearable placeholder="search event" v-model="keyword">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -89,6 +89,7 @@
                     this.events = response.data.related
                     this.guessYouLike = response.data.guessYouLike
                 })
+                this.keyword = "";
             },
             getEventDetail(id) {
                 this.$router.push('/eventdetail/' + id)
@@ -100,6 +101,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getPastEvents() {
                 this.axios({
@@ -108,6 +110,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getCurrentEvents() {
                 this.axios({
@@ -116,6 +119,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getJoinedEvents() {
                 this.axios({
@@ -124,6 +128,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             formatDate(date) {
                 return formatDate(date)
