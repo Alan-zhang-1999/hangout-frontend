@@ -147,9 +147,10 @@ export default {
 </script>
 <style>
 .nav-box {
-    position: relative;
+	position: sticky;
+	top: 0;
+    z-index: 100;
     border: 0px 0px 1px 0px solid;
-    /* padding-left: 30px; */
 }
 
 .nav-menu {
