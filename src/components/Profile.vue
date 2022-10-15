@@ -9,12 +9,14 @@
                                   src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
                     </div>
                     <div class="info">
-                        <div class="name"><p>{{name }}</p></div>
+                        <div class="name"><p>{{this.user.email}}</p></div>
                         <div class="name"><p>{{id}}</p></div>
                         <div class="name"><p>{{birthday}}</p></div>
                     </div>
 
-
+                    <el-icon  @click="editProfile" >
+                        <Edit />
+                    </el-icon>
 
                 </div>
             </div>
@@ -139,6 +141,12 @@
                     }
                 }).then(response => {
                     this.events = response.data
+                })
+            },
+            editProfile(){
+                this.$router.push({
+                    name:'Edit',
+                    params: {email: this.user.email}
                 })
             },
             getEventDetail(eventId) {
