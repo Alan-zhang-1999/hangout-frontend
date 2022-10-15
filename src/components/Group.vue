@@ -3,7 +3,7 @@
         <el-row>
             <el-form ref="form">
                 <el-form-item>
-                    <el-input placeholder="search group" v-model="keyword">
+                    <el-input clearable placeholder="search group" v-model="keyword">
                     </el-input>
                 </el-form-item>
 
@@ -72,6 +72,7 @@ export default {
                 this.groups = response.data;
                 // console.log(response.data)
             })
+            this.guessYouLike = [];
         },
         toCreateGroup() {
             this.$router.push('/CreateGroup')
@@ -88,6 +89,7 @@ export default {
                 this.guessYouLike = response.data.guessYouLike
                 console.log("search", keyword)
             })
+            this.keyword = "";
         },
         getGroupDetail(id) {
             console.log(id)

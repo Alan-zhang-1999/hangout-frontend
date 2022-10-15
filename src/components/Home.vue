@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="recommend-groups">
-            <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(id)">
+            <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(group.id)">
                 <div class="group-img">
                     <el-image style="width: 100px; height: 100px" :src="group.backgroundImage" />
                 </div>
@@ -147,12 +147,10 @@
                 this.Show1 = this.dataAftersclice1[this.currentPage1-1];
                 
             },
-
             created2() {
                 this.totalPage2 = Math.ceil(this.events.length/this.pageSize2)||1;
                 for(let i = 0; i < this.totalPage2;i++){
                     this.dataAftersclice2[i] = this.events.slice(this.pageSize2*i,this.pageSize2*(i+1));
-
                 }
                 this.Show2= this.dataAftersclice2[this.currentPage2];
                 
@@ -199,11 +197,9 @@
             width: fit-content;
             margin: auto 0px auto 400px;
         }
-
     .recommend-events {
         text-align: center;
         margin:20px;
-
     }
         .recommend-events-show {
             display:flex;
@@ -211,7 +207,6 @@
             flex-direction:row;
             justify-content:center;
             align-items:center;
-
         }
           .recommend-events-left {
                 height: 200px;
@@ -226,7 +221,6 @@
            }
                 .event-img{
                     padding:20px;
-
                 }
     .recommend-events-right {
         height: 200px;

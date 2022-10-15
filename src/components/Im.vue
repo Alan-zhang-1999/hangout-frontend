@@ -44,7 +44,6 @@
     </div>
   </template>
   <script>
-import { controlledComputed } from '@vueuse/shared';
 
   let socket;
   export default {

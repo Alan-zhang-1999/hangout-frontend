@@ -95,7 +95,7 @@ export default {
                 }
             }).then(response => {
                 console.log(response.data.message)
-                this.$router.push("/Group")
+                this.back();
             })
         }
     }
@@ -106,7 +106,7 @@ export default {
 .container {
     width: 100%;
     height: 100%;
-    position: absolute;
+    /* position: absolute; */
 }
 
 .gform {
