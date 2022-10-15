@@ -11,7 +11,7 @@
                 <el-input v-model="email" type="email">"Email""></el-input>
             </el-form-item>
             <el-form-item>
-            <el-button type="primary" @click="onSubmit" class="signup-button">Redister</el-button>
+            <el-button type="primary" @click="onSubmit" class="signup-button">Register</el-button>
             </el-form-item>
         </el-form>
     </div>
