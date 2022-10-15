@@ -136,7 +136,6 @@ export default {
                 this.initData()    
             }
             //maximun two events in a calendar day
-            return ret.slice(0, 2);
         },
 
         methods: {
@@ -289,47 +288,6 @@ export default {
                 }).then(response => {
                     this.events = response.data;
                 })
-            })
-        },
-        getFollowNum() {
-            this.axios({
-                url: "/api/follow/followCounts/" + this.id,
-                method: "get",
-            }).then(response => {
-                this.followNum = response.data;
-            })
-        },
-        getFollowerNum() {
-            this.axios({
-                url: "/api/follow/followerCounts/" + this.id,
-                method: "get",
-            }).then(response => {
-                this.followerNum = response.data;
-            })
-        },
-        getPastEvents() {
-            this.axios({
-                url: "/api/event/past",
-                method: "get",
-            }).then(response => {
-                this.events = response.data;
-            })
-        },
-        getCurrentEvents() {
-            this.axios({
-                url: "/api/event/current",
-                method: "get",
-            }).then(response => {
-                this.events = response.data;
-            })
-        },
-        getJoinedEvents() {
-            this.axios({
-                url: "/api/event/joined/" + this.user.email,
-                method: "get",
-            }).then(response => {
-                this.events = response.data;
-            })
         },
         formatDate(date) {
             return formatDate(date)
