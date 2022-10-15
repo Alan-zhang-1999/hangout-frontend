@@ -1,20 +1,24 @@
 <template>
     <div class="page">
-        <div class="p-info" >
+        <div class="p-info">
             <div class="profile-article">
                 <div class="base">
                     <div class="avator">
-                        <n-avatar round
-                                  :size="100"
-                                  src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+                        <n-avatar round :size="100" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
                     </div>
                     <div class="info">
-                        <div class="name"><p>{{this.user.email}}</p></div>
-                        <div class="name"><p>{{id}}</p></div>
-                        <div class="name"><p>{{birthday}}</p></div>
+                        <div class="name">
+                            <p>{{this.user.email}}</p>
+                        </div>
+                        <div class="name">
+                            <p>{{id}}</p>
+                        </div>
+                        <div class="name">
+                            <p>{{birthday}}</p>
+                        </div>
                     </div>
 
-                    <el-icon  @click="editProfile" >
+                    <el-icon @click="editProfile">
                         <Edit />
                     </el-icon>
 
@@ -26,8 +30,8 @@
                 <el-button type="info">Interests </el-button>
             </div>
             <div class="buttons">
-               
-                <n-tabs type="line" animated >
+
+                <n-tabs type="line" animated>
                     <n-tab-pane name="likes" tab="Likes">
                         <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
 
@@ -65,16 +69,17 @@
                         </div>
                     </n-tab-pane>
                     <n-tab-pane name="calendar" tab="Calendar">
-                        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+                        <el-calendar>
+                            <template #date-cell="{data}">
+                                <p>
+                                    {{ data.day.split('-').slice(1).join('-') }}<br />
+                                    <div v-for="name in dealMyDate(data.day)">
+                                        {{ name }}<br />
+                                    </div>
+                                </p>
+                            </template>
+                        </el-calendar>
 
-                            <!-- <img src="{{ event.img}}"/> -->
-                            <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
-                            <p>Location: {{event.location}}</p>
-
-                            <!-- <p>Topic: {{event.topic}}</p>
-    <p>Description: {{event.information}}</p> -->
-                        </div>
                     </n-tab-pane>
                 </n-tabs>
 
@@ -82,180 +87,196 @@
         </div>
     </div>
 </template>
+
 <script>
-    /*import { ref, reactive, toRefs } from "vue"*/
+import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
-    //const data = reactive({
-    //    name: "test",
-    //    id: "132",
-    //    birthday: "123"
-    //})
+export default {
 
-    import { checkLoginStatus, getUserId, formatDate } from '../util.js'
+    data() {
+        return {
+            name: "xx",
+            id: "132",
+            birthday: "123",
+            circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+            squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+            sizeList: ["large"],
+            events: [],
+            calendarevent: [],
+            keyword: "",
+            user: {},
+            eventId: 0,
+            followNum: "",
+            followerNum: ""
+        }
+    },
+    mounted: async function () {
+        this.user = await checkLoginStatus();
+        if (this.user.loginStatus) {
+            this.id = await getUserId(this.user.email);
+        }
+        this.getEvents();
+        this.getFollowNum();
+        this.getFollowerNum();
+    },
 
-
-    export default {
-
-        data(){
-            return {
-                name:"xx",
-                id:"132",
-                birthday: "123",
-                circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-                squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-                sizeList: ["large"],
-                events: [],
-                keyword: "",
-                user: {},
-                eventId: 0,
-                followNum: "",
-                followerNum: "",
-            }
-        },
-        mounted: async function () {
-            this.user = await checkLoginStatus();
-            if (this.user.loginStatus) {
-                this.id = await getUserId(this.user.email);
-            }
+    watch: {
+        $route() {
             this.getEvents();
             this.getFollowNum();
             this.getFollowerNum();
-        },
-        watch: {
-            $route() {
-                this.getEvents();
-                this.getFollowNum();
-                this.getFollowerNum();
+        }
+    },
+    methods: {
+
+        dealMyDate(v) {
+            var ret = [];
+            for (let i = 0; i < this.events.length; i++) {
+                if (this.formatDate(this.events[i].time).split(" ")[0] == v) {
+                    ret.push(this.events[i].name);
+                }
             }
+            //maximun two events in a calendar day
+            return ret.slice(0, 2);
         },
-        methods: {
-            toCreateEvent() {
-                this.$router.push('/createEvent')
-            },
-            serachEvent() {
-                this.axios({
-                    url: "/api/event/search",
-                    method: "get",
-                    params: {
-                        "keyword": this.keyword
-                    }
-                }).then(response => {
-                    this.events = response.data
+        toCreateEvent() {
+            this.$router.push('/createEvent')
+        },
+        serachEvent() {
+            this.axios({
+                url: "/api/event/search",
+                method: "get",
+                params: {
+                    "keyword": this.keyword
+                }
+            }).then(response => {
+                this.events = response.data
+            })
+        },
+        editProfile() {
+            this.$router.push({
+                name: 'Edit',
+                params: { email: this.user.email }
+            })
+        },
+        getEventDetail(eventId) {
+            this.$router.push('/eventdetail/' + eventId)
+        },
+        getEvents() {
+            //console.log("this.events...")
+            this.axios({
+                url: "/api/event/all",
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+                //this.events = JSON.parse(this.events)
+                this.events.forEach(function (value, index) {
+
                 })
-            },
-            editProfile(){
-                this.$router.push({
-                    name:'Edit',
-                    params: {email: this.user.email}
-                })
-            },
-            getEventDetail(eventId) {
-                this.$router.push('/eventdetail/' + eventId)
-            },
-            getEvents() {
-                this.axios({
-                    url: "/api/event/all",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-            },
-            getFollowNum() {
-                this.axios({
-                    url: "/api/follow/followCounts/"+this.id,
-                    method: "get",
-                }).then(response => {
-                    this.followNum = response.data;
-                })
-            },
-            getFollowerNum() {
-                this.axios({
-                    url: "/api/follow/followerCounts/"+this.id,
-                    method: "get",
-                }).then(response => {
-                    this.followerNum = response.data;
-                })
-            },
-            getPastEvents() {
-                this.axios({
-                    url: "/api/event/past",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-            },
-            getCurrentEvents() {
-                this.axios({
-                    url: "/api/event/current",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-            },
-            getJoinedEvents() {
-                this.axios({
-                    url: "/api/event/joined/" + this.user.email,
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-            },
-            formatDate(date) {
-                return formatDate(date)
-            }
+            })
+        },
+        getFollowNum() {
+            this.axios({
+                url: "/api/follow/followCounts/" + this.id,
+                method: "get",
+            }).then(response => {
+                this.followNum = response.data;
+            })
+        },
+        getFollowerNum() {
+            this.axios({
+                url: "/api/follow/followerCounts/" + this.id,
+                method: "get",
+            }).then(response => {
+                this.followerNum = response.data;
+            })
+        },
+        getPastEvents() {
+            this.axios({
+                url: "/api/event/past",
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        getCurrentEvents() {
+            this.axios({
+                url: "/api/event/current",
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        getJoinedEvents() {
+            this.axios({
+                url: "/api/event/joined/" + this.user.email,
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        formatDate(date) {
+            return formatDate(date)
         }
     }
+}
 </script>
 <style>
-    .page {
-        text-align: center;
-        background-color: rgb(234,238,231);
-  
-    }
-    .profile-article{
-        text-align:center;
-        margin:auto;
+.page {
+    text-align: center;
+    background-color: rgb(234, 238, 231);
 
-		width: 66%;
-		height: auto;
-		padding: 5px;
-		border: 1px solid;
-    }
-    .base {
-       
-        display: flex;
-    }
-    .follow{
-        padding:20px 0 20px 0;
-    }
-    .avator {
-        padding: 40px 0 40px 60px;
-    }
-    .info {
-        font-size: 20px;
-        padding: 40px 0 0 120px;
-    }
-    .buttons {
-        height: auto;
-        width: 66%;
-        margin: auto;
-        align-items: center;
-        justify-content: center;
-        
-    }
-    .event-container {
-        float: left;
-        width: 28%;
-        height: 100px;
-        margin: 10px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
-        border-radius: 10px;
-        display: block;
-        /* background-color: white; */
-    }
+}
 
-        .event-container:hover {
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
-        }
+.profile-article {
+    text-align: center;
+    margin: auto;
 
+    width: 66%;
+    height: auto;
+    padding: 5px;
+    border: 1px solid;
+}
+
+.base {
+
+    display: flex;
+}
+
+.follow {
+    padding: 20px 0 20px 0;
+}
+
+.avator {
+    padding: 40px 0 40px 60px;
+}
+
+.info {
+    font-size: 20px;
+    padding: 40px 0 0 120px;
+}
+
+.buttons {
+    height: auto;
+    width: 66%;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.event-container {
+    float: left;
+    width: 28%;
+    height: 100px;
+    margin: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
+    border-radius: 10px;
+    display: block;
+    /* background-color: white; */
+}
+
+.event-container:hover {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
+}
 </style>
