@@ -6,12 +6,16 @@
                     <div class="avator">
                         <n-avatar round
                                   :size="100"
-                                  src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+                                  :src="this.userProfile.background" />
                     </div>
                     <div class="info">
-                        <div class="name"><p>{{this.user.email}}</p></div>
-                        <div class="name"><p>{{id}}</p></div>
-                        <div class="name"><p>{{birthday}}</p></div>
+                        <div class="name"><p><el-icon><User /></el-icon>{{this.user.email}}</p></div>
+                        <div class="name" v-if="this.userProfile.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.userProfile.gender}}</p></el-tag></div>
+                        <div class="name" v-else-if="this.userProfile.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.userProfile.gender}}</p></el-tag></div>
+                        <div class="name"><el-tag  type="warning"><el-icon><Location /></el-icon>{{this.userProfile.birthday}}</el-tag></div>
+                        <el-tag  type="success">{{this.userProfile.job}}</el-tag>
+                        <div class="name"><el-tag  type="info"><el-icon><Location /></el-icon>{{this.userProfile.location}}</el-tag></div>
+                        <div >{{this.userProfile.biography}}</div>
                     </div>
 
                     <el-icon  @click="editProfile" >
@@ -83,13 +87,6 @@
     </div>
 </template>
 <script>
-    /*import { ref, reactive, toRefs } from "vue"*/
-
-    //const data = reactive({
-    //    name: "test",
-    //    id: "132",
-    //    birthday: "123"
-    //})
 
     import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
@@ -107,6 +104,7 @@
                 events: [],
                 keyword: "",
                 user: {},
+                userProfile:{},
                 eventId: 0,
                 followNum: "",
                 followerNum: "",
@@ -120,12 +118,14 @@
             this.getEvents();
             this.getFollowNum();
             this.getFollowerNum();
+            this.getuserProfile();
         },
         watch: {
             $route() {
                 this.getEvents();
                 this.getFollowNum();
                 this.getFollowerNum();
+                this.getuserProfile();
             }
         },
         methods: {
@@ -202,7 +202,21 @@
             },
             formatDate(date) {
                 return formatDate(date)
-            }
+            },
+            getuserProfile(){
+                console.log(this.email)
+                this.axios({
+                    url: "/api/userProfile/" + this.user.email,
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data);
+                    this.userProfile = response.data;
+                    if(this.userProfile.background == ""){
+                        this.userProfile.background = "https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg";
+                    }
+                    console.log(this.userProfile.background);
+                })
+            },
         }
     }
 </script>
