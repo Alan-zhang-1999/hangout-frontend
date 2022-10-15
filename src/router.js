@@ -32,7 +32,7 @@ const router = createRouter({
             component: Event 
         },
         { 
-            path: "/Profile",
+            path: "/Profile/:userId",
             component: Profile 
         },
         { 

@@ -4,30 +4,25 @@
             <div class="profile-article">
                 <div class="base">
                     <div class="avator">
-                        <n-avatar round :size="100" src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+                        <el-avatar>{{username}}</el-avatar>
                     </div>
                     <div class="info">
-                        <div class="name">
-                            <p>{{this.user.email}}</p>
-                        </div>
-                        <div class="name">
-                            <p>{{id}}</p>
-                        </div>
-                        <div class="name">
-                            <p>{{birthday}}</p>
-                        </div>
+                        <div class="name"><p>{{viewUser.email}}</p></div>
+                        <div class="name"><p>{{viewUser.id}}</p></div>
+                        <div class="name"><p>{{viewUser.birthday}}</p></div>
                     </div>
 
-                    <el-icon @click="editProfile">
+                    <el-icon  v-if="isMyProfile==true" @click="editProfile" >
                         <Edit />
                     </el-icon>
-
+                    <el-icon v-if="isMyProfile!=true" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chatWithHim()"><ChatDotRound /></el-icon>
                 </div>
             </div>
             <div class="follow">
                 <el-button type="info">Follower {{followerNum}}</el-button>
                 <el-button type="info">Following {{followNum}}</el-button>
-                <el-button type="info">Interests </el-button>
+                <!-- <el-button type="info">Interests </el-button> -->
             </div>
             <div class="buttons">
 
@@ -79,7 +74,6 @@
                                 </p>
                             </template>
                         </el-calendar>
-
                     </n-tab-pane>
                 </n-tabs>
 
@@ -120,16 +114,33 @@ export default {
         this.getFollowerNum();
     },
 
-    watch: {
-        $route() {
-            this.getEvents();
-            this.getFollowNum();
-            this.getFollowerNum();
-        }
-    },
-    methods: {
+        data(){
+            return {
+                events: [],
+                user: {},
+                viewUser:{},
+                eventId: 0,
+                followNum: "",
+                followerNum: "",
+                userId: "",
+                isMyProfile: false,
+                profile: "",
+                username: ''
+            }
+        },
+        mounted: function () {
+            this.initData()
+        },
+        watch: {
+            $route() {
+                this.initData()    
+            }
+            //maximun two events in a calendar day
+            return ret.slice(0, 2);
+        },
 
-        dealMyDate(v) {
+        methods: {
+            dealMyDate(v) {
             var ret = [];
             for (let i = 0; i < this.events.length; i++) {
                 if (this.formatDate(this.events[i].time).split(" ")[0] == v) {
@@ -139,39 +150,144 @@ export default {
             //maximun two events in a calendar day
             return ret.slice(0, 2);
         },
-        toCreateEvent() {
-            this.$router.push('/createEvent')
-        },
-        serachEvent() {
-            this.axios({
-                url: "/api/event/search",
-                method: "get",
-                params: {
-                    "keyword": this.keyword
+            async initData() {
+                this.userId = this.$route.params.userId
+                this.user = await checkLoginStatus();
+                console.log("))))", this.user)
+                if (this.user.loginStatus) {
+                    this.user.id = await getUserId(this.user.email);
                 }
-            }).then(response => {
-                this.events = response.data
-            })
-        },
-        editProfile() {
-            this.$router.push({
-                name: 'Edit',
-                params: { email: this.user.email }
-            })
-        },
-        getEventDetail(eventId) {
-            this.$router.push('/eventdetail/' + eventId)
-        },
-        getEvents() {
-            //console.log("this.events...")
-            this.axios({
-                url: "/api/event/all",
-                method: "get",
-            }).then(response => {
-                this.events = response.data;
-                //this.events = JSON.parse(this.events)
-                this.events.forEach(function (value, index) {
+                console.log("this.userId this.user.id", this.userId, this.user.id, this.userId == this.user.id)
+                if (this.userId == this.user.id){
+                    this.isMyProfile = true
+                    this.viewUser = this.user
+                    console.log("###", this.viewUser)
+                } else {
+                    this.isMyProfile = false
+                    this.viewUser = await this.getUserById()
+                    console.log("@@@", this.viewUser)
+                }
+                await this.getUserProfile(this.viewUser.email)
+                this.username = this.viewUser.username
+                console.log("profile", this.viewUser, this.user)
+                this.getEvents();
+                this.getFollowNum();
+                this.getFollowerNum();
+            },
+            // formatDate (fmt) {
+            //     const date = new Date()
+            //     var o = {
+            //         "M+": date.getMonth() + 1, // 月份
+            //         "d+": date.getDate(), // 日
+            //         "h+": date.getHours(), // 小时
+            //         "m+": date.getMinutes(), // 分
+            //         "s+": date.getSeconds(), // 秒
+            //         "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
+            //         "S": date.getMilliseconds() // 毫秒
+            //     };
+            //     if (/(y+)/.test(fmt))
+            //         fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+            //     for (var k in o)
+            //         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            //             return fmt;
+            // },
+            chatWithHim() {
+                console.log("chatWithHim")
+                console.log(this.user.id, this.viewUser.id)
+                this.axios({
+                    url: "/api/message/sendMessage",
+                    method: "post",
+                    data: {
+                        "userId": this.user.id,
+                        "toUserId": this.viewUser.id,
+                        "content": "Let's have a chat!",
+                        "time": formatDate(new Date())
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    this.$router.push('/Im')
+                })
+            },
+            getUserProfile(email) {
+                this.axios({
+                    url: "/api/userProfile/" + email,
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data);
+                    this.profile = response.data
+                })
+            },
+            getUserById(userId) {
+                return this.axios({
+                    url: "/api/getUserById/"+this.userId,
+                    method: "get"
+                }).then(res=> {
+                    // this.viewUser = res.data
+                    console.log("getUserById", this.viewUser)
+                    return res.data
+                })
+            },
+            toCreateEvent() {
+                this.$router.push('/createEvent')
+            },
+            editProfile(){
+                this.$router.push({
+                    name:'Edit',
+                    params: {email: this.user.email}
+                })
+            },
+            getEventDetail(eventId) {
+                this.$router.push('/eventdetail/' + eventId)
+            },
+            getEvents() {
+                this.axios({
+                    url: "/api/event/all",
+                    method: "get",
+                }).then(response => {
+                    this.events = response.data;
+                })
+            },
+            getFollowNum() {
+                console.log("getFollowNum", this.viewUser.id)
+                this.axios({
+                    url: "/api/follow/followCounts/"+this.viewUser.id,
+                    method: "get",
+                }).then(response => {
+                    this.followNum = response.data;
+                })
+            },
+            getFollowerNum() {
+                console.log("getFollowerNum", this.viewUser.id)
 
+                this.axios({
+                    url: "/api/follow/followerCounts/"+this.viewUser.id,
+                    method: "get",
+                }).then(response => {
+                    this.followerNum = response.data;
+                })
+            },
+            getPastEvents() {
+                this.axios({
+                    url: "/api/event/past",
+                    method: "get",
+                }).then(response => {
+                    this.events = response.data;
+                })
+            },
+            getCurrentEvents() {
+                this.axios({
+                    url: "/api/event/current",
+                    method: "get",
+                }).then(response => {
+                    this.events = response.data;
+                })
+            },
+            getJoinedEvents() {
+                this.axios({
+                    url: "/api/event/joined/" + this.viewUser.email,
+                    method: "get",
+                }).then(response => {
+                    this.events = response.data;
                 })
             })
         },

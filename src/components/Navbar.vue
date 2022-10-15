@@ -52,11 +52,11 @@
                                         <!-- <div>
                                         <a href="/#/Profile" style="text-decoration: none; color: black;">Profile</a>
                                     </div> -->
-                                        <router-link style="text-decoration: none; color: black;" to="/Profile">Profile
-                                        </router-link>
-                                    </el-dropdown-item>
-                                    <el-dropdown-item>
-                                        <!-- <div>
+                                    <router-link style="text-decoration: none; color: black;" :to="'/Profile/'+userId">Profile
+                                    </router-link>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <!-- <div>
                                         <a href="/#/Home" style="text-decoration: none; color: black;">Logout</a>
                                     </div> -->
                                         <div type="primary" @click="logout" class="btn-sign" size="medium">Logout</div>
@@ -82,7 +82,8 @@
 </template>
 
 <script>
-import { checkLoginStatus } from '../util.js'
+import { async } from '@firebase/util';
+import { checkLoginStatus, getUserId } from '../util.js'
 // import { Search } from '@element-plus/icons-vue'
 export default {
     data() {
@@ -97,22 +98,31 @@ export default {
             job: "",
             location: "",
             username: "",
+            email: "",
+            userId: ""
         }
     },
     name: "nav1",
     mounted: function () {
-        this.checkLoginStatus();
+        this.checkLogin();
     },
     watch: {
         $route() {
-            this.checkLoginStatus();
+            this.checkLogin();
         }
     },
     methods: {
-        checkLoginStatus() {
-            checkLoginStatus().then((res) => {
+        checkLogin() {
+            checkLoginStatus().then(async (res) => {
                 this.loginStatus = res.loginStatus;
                 this.username = res.username;
+                console.log("loginStatus", this.loginStatus)
+
+                if (this.loginStatus) {
+                    this.email = window.sessionStorage.getItem("userEmail")
+                    this.userId = await getUserId(this.email);
+                    console.log("email", this.email)
+                }
             })
         },
         search() {
@@ -146,7 +156,7 @@ export default {
             this.$router.push('/Login')
         },
         goProfile() {
-            this.$router.push('/Profile')
+            this.$router.push('/Profile/'+this.email)
         },
         goChat() {
             this.$router.push('/Im')
