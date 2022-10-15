@@ -5,7 +5,7 @@
         <el-button type="primary" @click="back">Back</el-button>
         <div class="profile-detail">
             <el-form-item label="Avatar">
-                    <img src="profile.background" alt="Avatar" ref="image" id="img" />
+                    <img src="profile.background" alt="Avatar" ref="image" id="img" class="avatarinput"/>
                     <input type="file" accept="image/*" ref="selectImage" />
                     <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
                 </el-form-item>
@@ -19,7 +19,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="Occupation">
-                <el-input v-model="profile.job"></el-input>
+                <el-input v-model="profile.occupation"></el-input>
             </el-form-item>
             <el-form-item label="Location">
                 <input type="text" v-model="profile.location" placeholder="" ref="address" class="textinput" />
@@ -47,7 +47,7 @@ import { generateFileName } from '../util.js'
             return {
                 profile:{
                     background:"",
-                    //id:"",
+                    id:"",
                     biography: "",
                     gender: "",
                     occupation: "",
@@ -104,6 +104,7 @@ import { generateFileName } from '../util.js'
                     console.log(response.data);
                     if(response.data != null) {
                         this.profile.biography = response.data.biography; 
+                        this.profile.id = response.data.id;
                         this.profile.gender = response.data.birthday;
                         this.profile.occupation = response.data.job;
                         this.profile.gender = response.data.gender;
@@ -120,12 +121,13 @@ import { generateFileName } from '../util.js'
                     url: "/api/userProfile/update",
                     method: "put",
                     data: {
-                        "background" : this.background,
-                        "biography" : this.biography,
-                        "birthday" : this.birthday,
-                        "gender" : this.gender,
-                        "job" : this.occupation,
-                        "location" : this.location,
+                        "background" : this.profile.background,
+                        "id" : this.profile.id,
+                        "biography" : this.profile.biography,
+                        "birthday" : this.profile.birthday,
+                        "gender" : this.profile.gender,
+                        "job" : this.profile.occupation,
+                        "location" : this.profile.location,
                     }
                 }).then(response => {
                     console.log(response.data)
@@ -137,5 +139,11 @@ import { generateFileName } from '../util.js'
     }
 </script>
 <style>
+    .profile-detail{
+        width:50%;
 
+    }
+    .avatarinput{
+        width:50px;
+    }
 </style>
