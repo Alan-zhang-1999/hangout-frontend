@@ -10,6 +10,7 @@ import EventDetail from "./components/EventDetail.vue"
 import CreateGroup from "./components/CreateGroup.vue"
 import CreateEvent from "./components/CreateEvent.vue"
 import Im from "./components/Im.vue"
+import Updateprofile from "./components/Updateprofile"
 
 const router = createRouter({
     history: createWebHashHistory(),
@@ -61,7 +62,12 @@ const router = createRouter({
         {
             path: "/Im",
             component: Im
-        }
+        },
+        {
+            path:"/Updateprofile/:email",
+            name:"Edit",
+            component: Updateprofile
+        },
     ]
 });
 
