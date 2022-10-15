@@ -27,42 +27,6 @@
             <div class="buttons">
 
                 <n-tabs type="line" animated>
-                    <n-tab-pane name="likes" tab="Likes">
-                        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-
-                            <!-- <img src="{{ event.img}}"/> -->
-                            <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
-                            <p>Location: {{event.location}}</p>
-
-                            <!-- <p>Topic: {{event.topic}}</p>
-    <p>Description: {{event.information}}</p> -->
-                        </div>
-                    </n-tab-pane>
-                    <n-tab-pane name="subscribes" tab="Subscribes">
-                        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-
-                            <!-- <img src="{{ event.img}}"/> -->
-                            <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
-                            <p>Location: {{event.location}}</p>
-
-                            <!-- <p>Topic: {{event.topic}}</p>
-    <p>Description: {{event.information}}</p> -->
-                        </div>
-                    </n-tab-pane>
-                    <n-tab-pane name="history" tab="History">
-                        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-
-                            <!-- <img src="{{ event.img}}"/> -->
-                            <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
-                            <p>Location: {{event.location}}</p>
-
-                            <!-- <p>Topic: {{event.topic}}</p>
-    <p>Description: {{event.information}}</p> -->
-                        </div>
-                    </n-tab-pane>
                     <n-tab-pane name="calendar" tab="Calendar">
                         <el-calendar>
                             <template #date-cell="{data}">
@@ -75,6 +39,42 @@
                             </template>
                         </el-calendar>
                     </n-tab-pane>
+                    <n-tab-pane name="MyGroups" tab="MyGroups">
+                        <div v-for="group in userGroups" class="event-container" @click="getEventDetail(group.id)">
+
+                            <!-- <img src="{{ group.img}}"/> -->
+                            <p>Name: {{ group.name }}</p>
+                            <p>Date: {{formatDate(group.time)}}</p>
+                            <p>Location: {{group.location}}</p>
+
+                            <!-- <p>Topic: {{group.topic}}</p>
+    <p>Description: {{group.information}}</p> -->
+                        </div>
+                    </n-tab-pane>
+                    <n-tab-pane name="subscribes" tab="Subscribes">
+                        <div v-for="event in currentEvents" class="event-container" @click="getEventDetail(event.id)">
+
+                            <!-- <img src="{{ event.img}}"/> -->
+                            <p>Name: {{ event.name }}</p>
+                            <p>Date: {{formatDate(event.time)}}</p>
+                            <p>Location: {{event.location}}</p>
+
+                            <!-- <p>Topic: {{event.topic}}</p>
+    <p>Description: {{event.information}}</p> -->
+                        </div>
+                    </n-tab-pane>
+                    <n-tab-pane name="history" tab="History">
+                        <div v-for="event in pastEvents" class="event-container" @click="getEventDetail(event.id)">
+
+                            <!-- <img src="{{ event.img}}"/> -->
+                            <p>Name: {{ event.name }}</p>
+                            <p>Date: {{formatDate(event.time)}}</p>
+                            <p>Location: {{event.location}}</p>
+
+                            <!-- <p>Topic: {{event.topic}}</p>
+    <p>Description: {{event.information}}</p> -->
+                        </div>
+                    </n-tab-pane>
                 </n-tabs>
 
             </div>
@@ -86,34 +86,6 @@
 import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
 export default {
-
-    data() {
-        return {
-            name: "xx",
-            id: "132",
-            birthday: "123",
-            circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-            squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-            sizeList: ["large"],
-            events: [],
-            calendarevent: [],
-            keyword: "",
-            user: {},
-            eventId: 0,
-            followNum: "",
-            followerNum: ""
-        }
-    },
-    mounted: async function () {
-        this.user = await checkLoginStatus();
-        if (this.user.loginStatus) {
-            this.id = await getUserId(this.user.email);
-        }
-        this.getEvents();
-        this.getFollowNum();
-        this.getFollowerNum();
-    },
-
         data(){
             return {
                 events: [],
@@ -170,26 +142,12 @@ export default {
                 this.username = this.viewUser.username
                 console.log("profile", this.viewUser, this.user)
                 this.getEvents();
+                this.getPastEvents();
+                this.getCurrentEvents();
                 this.getFollowNum();
                 this.getFollowerNum();
+                this.getUserGroups();
             },
-            // formatDate (fmt) {
-            //     const date = new Date()
-            //     var o = {
-            //         "M+": date.getMonth() + 1, // 月份
-            //         "d+": date.getDate(), // 日
-            //         "h+": date.getHours(), // 小时
-            //         "m+": date.getMinutes(), // 分
-            //         "s+": date.getSeconds(), // 秒
-            //         "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
-            //         "S": date.getMilliseconds() // 毫秒
-            //     };
-            //     if (/(y+)/.test(fmt))
-            //         fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
-            //     for (var k in o)
-            //         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
-            //             return fmt;
-            // },
             chatWithHim() {
                 console.log("chatWithHim")
                 console.log(this.user.id, this.viewUser.id)
@@ -240,7 +198,7 @@ export default {
             },
             getEvents() {
                 this.axios({
-                    url: "/api/event/all",
+                    url: "/api/event/getUserEvent/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
                     this.events = response.data;
@@ -267,18 +225,27 @@ export default {
             },
             getPastEvents() {
                 this.axios({
-                    url: "/api/event/past",
+                    url: "/api/event/past/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
-                    this.events = response.data;
+                    this.pastEvents = response.data;
                 })
             },
             getCurrentEvents() {
                 this.axios({
-                    url: "/api/event/current",
+                    url: "/api/event/current/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
-                    this.events = response.data;
+                    this.currentEvents = response.data;
+                })
+            },
+            
+            getUserGroups() {
+                this.axios({
+                    url: "/api/group/getUserGroup/"+this.viewUser.id,
+                    method: "get",
+                }).then(response => {
+                    this.userGroups = response.data;
                 })
             },
             getJoinedEvents() {

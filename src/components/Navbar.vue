@@ -82,7 +82,6 @@
 </template>
 
 <script>
-import { async } from '@firebase/util';
 import { checkLoginStatus, getUserId } from '../util.js'
 // import { Search } from '@element-plus/icons-vue'
 export default {
