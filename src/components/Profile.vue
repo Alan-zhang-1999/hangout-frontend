@@ -1,6 +1,6 @@
 <template>
     <div class="page">
-        <div class="p-info" >
+        <div class="p-info">
             <div class="profile-article">
                 <div class="base">
                     <div class="avator">
@@ -17,8 +17,6 @@
                     </el-icon>
                     <el-icon v-if="isMyProfile!=true" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
                              @click="chatWithHim()"><ChatDotRound /></el-icon>
-
-
                 </div>
             </div>
             <div class="follow">
@@ -27,8 +25,8 @@
                 <!-- <el-button type="info">Interests </el-button> -->
             </div>
             <div class="buttons">
-               
-                <n-tabs type="line" animated >
+
+                <n-tabs type="line" animated>
                     <n-tab-pane name="likes" tab="Likes">
                         <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
 
@@ -83,20 +81,38 @@
         </div>
     </div>
 </template>
+
 <script>
-    /*import { ref, reactive, toRefs } from "vue"*/
-
-    //const data = reactive({
-    //    name: "test",
-    //    id: "132",
-    //    birthday: "123"
-    //})
-
-    import { connectStorageEmulator } from '@firebase/storage'
 import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
+export default {
 
-    export default {
+    data() {
+        return {
+            name: "xx",
+            id: "132",
+            birthday: "123",
+            circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
+            squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
+            sizeList: ["large"],
+            events: [],
+            calendarevent: [],
+            keyword: "",
+            user: {},
+            eventId: 0,
+            followNum: "",
+            followerNum: ""
+        }
+    },
+    mounted: async function () {
+        this.user = await checkLoginStatus();
+        if (this.user.loginStatus) {
+            this.id = await getUserId(this.user.email);
+        }
+        this.getEvents();
+        this.getFollowNum();
+        this.getFollowerNum();
+    },
 
         data(){
             return {
@@ -119,7 +135,10 @@ import { checkLoginStatus, getUserId, formatDate } from '../util.js'
             $route() {
                 this.initData()    
             }
+            //maximun two events in a calendar day
+            return ret.slice(0, 2);
         },
+
         methods: {
             dealMyDate(v) {
             var ret = [];
@@ -270,63 +289,110 @@ import { checkLoginStatus, getUserId, formatDate } from '../util.js'
                 }).then(response => {
                     this.events = response.data;
                 })
-            },
-            formatDate(date) {
-                return formatDate(date)
-            }
+            })
+        },
+        getFollowNum() {
+            this.axios({
+                url: "/api/follow/followCounts/" + this.id,
+                method: "get",
+            }).then(response => {
+                this.followNum = response.data;
+            })
+        },
+        getFollowerNum() {
+            this.axios({
+                url: "/api/follow/followerCounts/" + this.id,
+                method: "get",
+            }).then(response => {
+                this.followerNum = response.data;
+            })
+        },
+        getPastEvents() {
+            this.axios({
+                url: "/api/event/past",
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        getCurrentEvents() {
+            this.axios({
+                url: "/api/event/current",
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        getJoinedEvents() {
+            this.axios({
+                url: "/api/event/joined/" + this.user.email,
+                method: "get",
+            }).then(response => {
+                this.events = response.data;
+            })
+        },
+        formatDate(date) {
+            return formatDate(date)
         }
     }
+}
 </script>
 <style>
-    .page {
-        text-align: center;
-        background-color: rgb(234,238,231);
-  
-    }
-    .profile-article{
-        text-align:center;
-        margin:auto;
+.page {
+    text-align: center;
+    background-color: rgb(234, 238, 231);
 
-		width: 66%;
-		height: auto;
-		padding: 5px;
-		border: 1px solid;
-    }
-    .base {
-       
-        display: flex;
-    }
-    .follow{
-        padding:20px 0 20px 0;
-    }
-    .avator {
-        padding: 40px 0 40px 60px;
-    }
-    .info {
-        font-size: 20px;
-        padding: 40px 0 0 120px;
-    }
-    .buttons {
-        height: auto;
-        width: 66%;
-        margin: auto;
-        align-items: center;
-        justify-content: center;
-        
-    }
-    .event-container {
-        float: left;
-        width: 28%;
-        height: 100px;
-        margin: 10px;
-        box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
-        border-radius: 10px;
-        display: block;
-        /* background-color: white; */
-    }
+}
 
-        .event-container:hover {
-            box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
-        }
+.profile-article {
+    text-align: center;
+    margin: auto;
 
+    width: 66%;
+    height: auto;
+    padding: 5px;
+    border: 1px solid;
+}
+
+.base {
+
+    display: flex;
+}
+
+.follow {
+    padding: 20px 0 20px 0;
+}
+
+.avator {
+    padding: 40px 0 40px 60px;
+}
+
+.info {
+    font-size: 20px;
+    padding: 40px 0 0 120px;
+}
+
+.buttons {
+    height: auto;
+    width: 66%;
+    margin: auto;
+    align-items: center;
+    justify-content: center;
+
+}
+
+.event-container {
+    float: left;
+    width: 28%;
+    height: 100px;
+    margin: 10px;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
+    border-radius: 10px;
+    display: block;
+    /* background-color: white; */
+}
+
+.event-container:hover {
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 8px 16px;
+}
 </style>
