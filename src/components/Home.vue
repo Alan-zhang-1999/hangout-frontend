@@ -4,13 +4,12 @@
         <div class="event">
             <div class="event-show">
                 <div class="event-left" >
-                    <!--<div v-for="fit in fits" :key="fit" class="block">
-                        
-                        <el-image style="width: 500px; height: 300px" :src="url" :fit="fit" />
-                    </div>-->
+        
                     <div  v-for="item in Show1" @click="gotoEventdetail">
-                        <el-image style="width: 500px; height: 300px" :src="url" :fit="fit" />
-                        <h3>{{item.eid}}--{{item.name}}</h3>
+                        <el-image style="width: 500px; height: 300px" :src="item.backgroundImage" />
+                        <P>{{item.name}}</P>
+                        <p>{{item.location}}</p>
+                        <p>{{item.topic}}</p>
                     </div>
                     <div class="event-right">
                         <marquee behavior="scroll" direction="left">Your next event is coming soon!</marquee>
@@ -26,29 +25,15 @@
                 Other events you may be interested in!
             </div>
             <div class="recommend-events-show">
-                <!--<div class="recommend-events-left">
-                    <div class="event-img">
-                        <el-image style="width: 150px; height: 150px" :src="url" :fit="fit" />
-                    </div>
-                    <div class="event-describe">
-                        Climbing
-                    </div>
-                </div>
-                <div class="recommend-events-right">
-                    <div class="event-img">
-                        <el-image style="width: 150px; height: 150px" :src="url" :fit="fit" />
-                    </div>
-                    <div class="event-describe">
-                        Reading
-                    </div>
-                </div>-->
+                
                 <article v-for="item in Show2" class="recommend-events-left">
                     <div class="event-img">
-                        <el-image style="width: 150px; height: 150px" :src="url" :fit="fit" />
+                        <el-image style="width: 150px; height: 150px" :src="item.backgroundImage" />
                     </div>
                     <div class="event-describe">
-                        {{item.eid}}<br/>
-                        {{item.name}}
+                        <P>{{item.name}}</P>
+                        <p>{{item.location}}</p>
+                        <p>{{item.topic}}</p>
                     </div>
                 </article>
             </div>
@@ -59,7 +44,7 @@
         <div class="recommend-groups">
             <div class="group-detail" v-for="group in groups">
                 <div class="group-img">
-                    <el-image style="width: 100px; height: 100px" :src="url" :fit="fit" />
+                    <el-image style="width: 100px; height: 100px" :src="group.backgroundImage" />
                 </div>
                 <div class="group-text">
                     {{group.name}}
@@ -90,26 +75,13 @@
     export default{
         data(){
             return {
-                testdata:[
-                    {eid: 1, name:'event1'},
-                    {eid: 2, name:'event2'},
-                    {eid: 3, name:'event3'},
-                    {eid: 4, name:'event4'},
-                    {eid: 5, name:'event5'},
-                    {eid: 6, name:'event6'},
-                ],
                 groups:[
                     {gid: 1, name:'group1'},
                     {gid: 2, name:'group2'},
                     {gid: 3, name:'group3'},
                 ],
                 events:[
-                    {eid: 1, name:'event1'},
-                    {eid: 2, name:'event2'},
-                    {eid: 3, name:'event3'},
-                    {eid: 4, name:'event4'},
-                    {eid: 5, name:'event5'},
-                    {eid: 6, name:'event6'},
+                    
                 ],
                 dataAftersclice1:[],
                 pageSize1: 1,
@@ -123,20 +95,15 @@
                 totalPage2: 1,
             }
         },
-        mounted: function() {
-                this.created1();
-                this.created2();  
+        mounted: function() { 
                 this.loadAllGroups();
                 this.loadAllEvents();
                 
         },
         watch: {
             $route(){
-                this.created1();
-                this.created2(); 
                 this.loadAllGroups();
                 this.loadAllEvents();
-                console.log(this.totalPage1);
             }
         },
         methods:{
@@ -145,7 +112,7 @@
                     url: "/api/showGroups",
                     method: "get"
                 }).then(response => {
-                    //this.groups = response.data;
+                    this.groups = response.data;
                     console.log(response.data)
                 })
             },
@@ -154,47 +121,49 @@
                     url: "/api/event/all",
                     method: "get",
                 }).then(response => {
-                    //this.events = response.data;
+                    this.events = response.data;
+                    console.log(this.events,"home")
+                    console.log()
+                    this.created1();
+                    this.created2();
                 })
             },
             gotoEventdetail(id){
                 this.this.$router.push('/eventdetail/'+id)
             },
             created1() {
+                
                 this.totalPage1 = Math.ceil(this.events.length/this.pageSize1)||1;
                 for(let i = 0; i < this.totalPage1;i++){
-                    this.dataAftersclice1[i] = this.testdata.slice(this.pageSize1*i,this.pageSize1*(i+1));
-
+                    this.dataAftersclice1[i] = this.events.slice(this.pageSize1*i,this.pageSize1*(i+1));
+                    
                 }
                 this.Show1= this.dataAftersclice1[this.currentPage1];
+                
             },
             Page1(i){
                 this.currentPage1 = i;
                 this.Show1 = this.dataAftersclice1[this.currentPage1-1];
-                console.log(this.currentPage1);
+                
             },
 
             created2() {
                 this.totalPage2 = Math.ceil(this.events.length/this.pageSize2)||1;
                 for(let i = 0; i < this.totalPage2;i++){
-                    this.dataAftersclice2[i] = this.testdata.slice(this.pageSize2*i,this.pageSize2*(i+1));
+                    this.dataAftersclice2[i] = this.events.slice(this.pageSize2*i,this.pageSize2*(i+1));
 
                 }
                 this.Show2= this.dataAftersclice2[this.currentPage2];
-                console.log(this.dataAftersclice2.length)
+                
             },
             Page2(i){
                 this.currentPage2 = i;
                 this.Show2 = this.dataAftersclice2[this.currentPage2-1];
-                console.log(this.currentPage2);
                 
             },
         }
     } 
-    /*const fits = [ 'contain',]
-    const url =
-        'https://img.redbull.com/images/c_crop,w_5122,h_2561,x_0,y_2956,f_auto,q_auto/c_scale,w_1200/redbullcom/2019/06/03/83ddcec2-b607-4def-a965-abb0b94fa412/how-to-take-indoor-climbing-outdoors'
-    */
+    
 </script>
 
 <style scoped>
