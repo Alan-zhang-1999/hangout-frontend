@@ -9,21 +9,19 @@
                                   src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
                     </div>
                     <div class="info">
-                        <div class="name"><p>{{this.user.email}}</p></div>
+                        <div class="name"><p>{{name }}</p></div>
                         <div class="name"><p>{{id}}</p></div>
                         <div class="name"><p>{{birthday}}</p></div>
                     </div>
 
-                    <el-icon  @click="editProfile" >
-                        <Edit />
-                    </el-icon>
+
 
                 </div>
             </div>
             <div class="follow">
-                <el-button type="info">Follower {{followerNum}}</el-button>
-                <el-button type="info">Following {{followNum}}</el-button>
-                <el-button type="info">Interests </el-button>
+                <el-button type="info">Follower</el-button>
+                <el-button type="info">Following</el-button>
+                <el-button type="info">Interests</el-button>
             </div>
             <div class="buttons">
                
@@ -65,15 +63,8 @@
                         </div>
                     </n-tab-pane>
                     <n-tab-pane name="calendar" tab="Calendar">
-                      <el-calendar>
-                        <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
-                        <template #date-cell="{data}">
-                          <p> <!--这里原本有动态绑定的class，去掉-->
-                            {{ data.day.split('-').slice(1).join('-') }}<br /> {{dealMyDate(data.day)}}
-                          </p>
-                        </template>
+                      <el-calendar v-model="value">
                       </el-calendar>
-
                         <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
 
                             <!-- <img src="{{ event.img}}"/> -->
@@ -117,14 +108,7 @@
                 calendarevent:[],
                 keyword: "",
                 user: {},
-                eventId: 0,
-                followNum: "",
-                followerNum: "",
-                resDate: [
-                {"date":"2022-10-16","content":"放假"},
-                {"date":"2022-10-18","content":"去交电费"},
-                {"date":"2022-10-20","content":"去学习vue"}
-              ],
+              value: new Date()
             }
         },
         mounted: async function () {
@@ -133,32 +117,13 @@
                 this.id = await getUserId(this.user.email);
             }
             this.getEvents();
-            this.getFollowNum();
-            this.getFollowerNum();
         },
-
         watch: {
             $route() {
                 this.getEvents();
-                this.getFollowNum();
-                this.getFollowerNum();
             }
         },
         methods: {
-
-          dealMyDate(v) {
-            console.log("dealMyDate...")
-            console.log(v)
-            let len = this.events.length
-            let res = ""
-            for(let i=0; i<len; i++){
-              if(this.resDate[i].date == v) {
-                res = this.events[i].name
-                break
-              }
-            }
-            return res
-          },
             toCreateEvent() {
                 this.$router.push('/createEvent')
             },
@@ -173,53 +138,34 @@
                     this.events = response.data
                 })
             },
-            editProfile(){
-                this.$router.push({
-                    name:'Edit',
-                    params: {email: this.user.email}
-                })
+            getEventDetail(id) {
+                this.$router.push('/eventdetail/' + id)
             },
-
-            getEventDetail(eventId) {
-                this.$router.push('/eventdetail/' + eventId)
-            },
-
             getEvents() {
-            //console.log("this.events...")
-            this.axios({
-              url: "/api/event/all",
-              method: "get",
-            }).then(response => {
-              this.events = response.data;
-              //this.events = JSON.parse(this.events)
-              this.events.forEach(function(value, index){
-
-              })
-            })
-            },
-
-            getFollowNum() {
+              //console.log("this.events...")
                 this.axios({
-                    url: "/api/follow/followCounts/"+this.id,
+                    url: "/api/event/all",
                     method: "get",
                 }).then(response => {
-                    this.followNum = response.data;
+                  this.events = response.data;
+                  //this.events = JSON.parse(this.events)
+                  this.events.forEach(function(value, index){
+                    console.log("time:"+value.time)
+                    calendarevent.push(value.time)
+                  })
                 })
             },
-            getFollowerNum() {
-                this.axios({
-                    url: "/api/follow/followerCounts/"+this.id,
-                    method: "get",
-                }).then(response => {
-                    this.followerNum = response.data;
-                })
-            },
+
             getPastEvents() {
                 this.axios({
                     url: "/api/event/past",
                     method: "get",
                 }).then(response => {
                     this.events = response.data;
+                    this.events = JSON.parse(this.events)
+                    this.events.forEach(function(value, index){
+
+                    })
                 })
             },
             getCurrentEvents() {
