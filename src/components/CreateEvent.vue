@@ -29,6 +29,16 @@
                 <el-form-item label="Description">
                     <input type="textarea" v-model="event.information" class="textinput" />
                 </el-form-item>
+                <el-form-item label="selection">
+                    <el-select v-model="groupId" class="m-2" placeholder="Select" size="large">
+                        <el-option
+                        v-for="item in groups"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id"
+                        />
+                    </el-select>
+                </el-form-item>
                 <el-form-item label="Photos">
                     <img src="event.url" alt="background" ref="image" id="img" />
                     <input type="file" accept="image/*" ref="selectImage" />
@@ -65,7 +75,9 @@ export default {
                 url: ""
             },
             percentage: 0,
-            uploadStatus: ""
+            uploadStatus: "",
+            groups: [],
+            groupId: ""
         }
     },
     mounted: function () {
@@ -97,6 +109,12 @@ export default {
             this.event.url = url;
             this.$refs.image.src = url;
         });
+        this.getUserGroups()
+    },
+    watch: {
+        $route(){
+            this.getUserGroups()
+        }
     },
     methods: {
         back() {
@@ -107,6 +125,21 @@ export default {
             var time = this.event.date2
             var dateAndTime = new Date(date.getFullYear(), date.getMonth(), date.getDate(), time.getHours(), time.getMinutes(), time.getSeconds())
             return dateAndTime
+        },
+        getUserGroups() {
+            console.log('getUserGroups')
+            this.axios({
+                url: "/api/group/getGroup",
+                method: "get"
+            }).then(respone => {
+                console.log('getUserGroups', respone.data)
+                this.groups = respone.data
+            })
+        },
+        insertGroupEvent() {
+            this.axios({
+                url
+            })
         },
         createEvent() {
             if (this.event.name.length == 0 || this.event.location.length == 0 || this.event.topic.length == 0 || this.event.date1.length == 0 || this.event.date2.length == 0 || this.event.information.length == 0) {
@@ -127,7 +160,7 @@ export default {
                 return;
             }
             this.axios({
-                url: "/api/event/create",
+                url: "/api/event/create?groupId="+this.groupId,
                 method: "post",
                 data: {
                     "name": this.event.name,
@@ -135,7 +168,7 @@ export default {
                     "topic": this.event.topic,
                     "time": this.mergeDateAndTime(),
                     "information": this.event.information,
-                    "backgroundImage": this.event.url
+                    "backgroundImage": this.event.url,
                 }
             }).then(response => {
                 console.log(response.data)
