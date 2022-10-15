@@ -16,7 +16,7 @@
                     <router-link style="text-decoration: none; color: black;" to="/Events/-">Events</router-link>
                 </el-menu-item>
                 <el-menu-item>
-                    <el-input v-model="input_text" placeholder="input_text" class="input-with-select" style="width: 500px">
+                    <el-input v-model="input_text" placeholder="Search" class="input-with-select" style="width: 500px">
                         <template #prepend>
                             <el-select v-model="select" placeholder="select" style="width: 100px">
                                 <el-option label="Group" value="Group" />
@@ -29,23 +29,32 @@
                     </el-input>
                 </el-menu-item>
             </el-row>
-            <el-row v-if="loginStatus">
+            <div style="position: absolute; right: 0;">
+                <el-row v-if="loginStatus">
                 <el-menu-item>
                     <el-dropdown>
                         <el-avatar>{{username.slice(0, 3)}}</el-avatar>
                         <template #dropdown>
                             <el-dropdown-menu>
-                                <el-menu-item>
+                                <el-dropdown-item>
+                                    <!-- <div>
+                                        <a href="/#/Im" style="text-decoration: none; color: black;">Chat</a>
+                                    </div> -->
                                     <router-link style="text-decoration: none; color: black;" to="/Im">Chat
                                     </router-link>
-                                </el-menu-item>
-                                <el-menu-item>
+                                </el-dropdown-item>
+                                <el-dropdown-item>
+                                    <!-- <div>
+                                        <a href="/#/Profile" style="text-decoration: none; color: black;">Profile</a>
+                                    </div> -->
                                     <router-link style="text-decoration: none; color: black;" to="/Profile">Profile
                                     </router-link>
-                                </el-menu-item>
+                                </el-dropdown-item>
                                 <el-dropdown-item>
-                                    <i type="primary" @click="logout" class="btn-sign" size="medium">Logout
-                                    </i>
+                                    <!-- <div>
+                                        <a href="/#/Home" style="text-decoration: none; color: black;">Logout</a>
+                                    </div> -->
+                                    <div type="primary" @click="logout" class="btn-sign" size="medium">Logout</div>
                                 </el-dropdown-item>
                             </el-dropdown-menu>
                         </template>
@@ -60,6 +69,8 @@
                     <router-link style="text-decoration: none; color: black;" to="/SignUp">SignUp</router-link>
                 </el-menu-item>
             </el-row>
+            </div>
+            
         </el-menu>
     </div>
     <router-view></router-view>
@@ -67,12 +78,12 @@
 
 <script>
 import { checkLoginStatus } from '../util.js'
-import { Search } from '@element-plus/icons-vue'
+// import { Search } from '@element-plus/icons-vue'
 export default {
     data() {
         return {
             input_text: "",
-            select: "",
+            select: "Event",
             loginStatus: false,
             background: "",
             biography: "",
