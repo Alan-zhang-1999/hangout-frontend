@@ -29,6 +29,7 @@
                 <p>Location: {{event.location}}</p>
             </div>
         </div>
+        <h2 v-else>There are no events you want.</h2>
         <div class="show" v-if="guessYouLike.length != 0">
             <h2>Guess You Like</h2>
             <div v-for="event in guessYouLike" class="event-container" @click="getEventDetail(event.id)">
