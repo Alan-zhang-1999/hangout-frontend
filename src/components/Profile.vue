@@ -63,6 +63,15 @@
                         </div>
                     </n-tab-pane>
                     <n-tab-pane name="calendar" tab="Calendar">
+                      <el-calendar>
+                        <!-- 这里使用的是 2.5 slot 语法，对于新项目请使用 2.6 slot 语法-->
+                        <template #date-cell="{data}">
+                          <p> <!--这里原本有动态绑定的class，去掉-->
+                            {{ data.day.split('-').slice(1).join('-') }}<br /> {{dealMyDate(data.day)}}
+                          </p>
+                        </template>
+                      </el-calendar>
+
                         <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
 
                             <!-- <img src="{{ event.img}}"/> -->
@@ -103,11 +112,17 @@
                 squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
                 sizeList: ["large"],
                 events: [],
+                calendarevent:[],
                 keyword: "",
                 user: {},
                 eventId: 0,
                 followNum: "",
                 followerNum: "",
+                resDate: [
+                {"date":"2022-10-16","content":"放假"},
+                {"date":"2022-10-18","content":"去交电费"},
+                {"date":"2022-10-20","content":"去学习vue"}
+              ],
             }
         },
         mounted: async function () {
@@ -119,6 +134,7 @@
             this.getFollowNum();
             this.getFollowerNum();
         },
+
         watch: {
             $route() {
                 this.getEvents();
@@ -127,6 +143,20 @@
             }
         },
         methods: {
+
+          dealMyDate(v) {
+            console.log("dealMyDate...")
+            console.log(v)
+            let len = this.events.length
+            let res = ""
+            for(let i=0; i<len; i++){
+              if(this.resDate[i].date == v) {
+                res = this.events[i].name
+                break
+              }
+            }
+            return res
+          },
             toCreateEvent() {
                 this.$router.push('/createEvent')
             },
@@ -141,17 +171,25 @@
                     this.events = response.data
                 })
             },
+
             getEventDetail(eventId) {
                 this.$router.push('/eventdetail/' + eventId)
             },
+
             getEvents() {
-                this.axios({
-                    url: "/api/event/all",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
+            //console.log("this.events...")
+            this.axios({
+              url: "/api/event/all",
+              method: "get",
+            }).then(response => {
+              this.events = response.data;
+              //this.events = JSON.parse(this.events)
+              this.events.forEach(function(value, index){
+
+              })
+            })
             },
+
             getFollowNum() {
                 this.axios({
                     url: "/api/follow/followCounts/"+this.id,
