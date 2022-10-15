@@ -12,6 +12,11 @@
         <p>{{event.topic}}</p>
         <p>{{event.information}}</p>
     </div>
+
+    <div v-for="user in users" @click="getUserProfile(user.email)" style="width:100px; height: 50px; border: 1px 1px;">
+        <p>{{user.username}}</p>
+        <!-- <p>{{user.email}}</p> -->
+    </div>
 </template>
 <script>
     import { checkLoginStatus, getUserId, formatDate } from '../util.js'
@@ -29,12 +34,14 @@
                 },
                 id: 0,
                 user: {},
-                check: false
+                check: false,
+                users: []
             }
         },
         mounted: async function() {
             this.getEventDetail(this.$route.params.id);
             this.user = await checkLoginStatus();
+            await this.getAllEventUsers(this.$route.params.id);
             if (this.user.loginStatus) {
                 this.id = await getUserId(this.user.email);
                 await this.checkUserInEvent();
@@ -43,6 +50,7 @@
         watch: {
 			$route(){
 				this.getEventDetail(this.$route.params.id);
+                this.getAllEventUsers(this.$route.params.id);
 			}
 		},
         methods: {
@@ -101,12 +109,24 @@
                     console.log(response.data);
                 })
             },
-            toggleEvent() {
-                if (this.check) {
-                    this.leaveEvent();
-                } else {
-                    this.joinEvent();
-                }
+            getAllEventUsers(id) {
+                this.axios({
+                    url: "/api/event/users",
+                    method: "get",
+                    params: {
+                        "eventId": id
+                    }
+                }).then(response => {
+                    this.users = response.data;
+                })
+            },
+            getUserProfile(email) {
+                this.axios({
+                    url: "/api/userProfile/" + email,
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data);
+                })
             }
             
         }

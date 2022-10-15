@@ -12,7 +12,7 @@
                     <search />
                 </el-icon>
             </el-button>
-            <el-button type="primary" @click="toCreateEvent">Create Event</el-button>
+            <el-button type="primary" v-if="user.loginStatus" @click="toCreateEvent">Create Event</el-button>
 
         </el-row>
         <el-row>
