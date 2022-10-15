@@ -5,14 +5,10 @@
         <el-button type="primary" @click="back">Back</el-button>
         <div class="profile-detail">
             <el-form-item label="Avatar">
-                <el-upload
-                class="avatar-uploader"
-                action=""
-                :show-file-list="false">
-                    <img v-if="imageUrl" :src="imageUrl" class="avatar">
-                    <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-            </el-form-item>
+                    <img src="profile.background" alt="Avatar" ref="image" id="img" />
+                    <input type="file" accept="image/*" ref="selectImage" />
+                    <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
+                </el-form-item>
             <el-form-item label="Biography">
                 <el-input type="textarea" v-model="profile.biography"></el-input>
             </el-form-item>
@@ -26,11 +22,11 @@
                 <el-input v-model="profile.job"></el-input>
             </el-form-item>
             <el-form-item label="Location">
-                <el-input v-model="profile.location"></el-input>
+                <input type="text" v-model="profile.location" placeholder="" ref="address" class="textinput" />
             </el-form-item>
             <el-form-item label="Birthday">
                 <el-col :span="11">
-                <el-date-picker type="date" placeholder="YYYY-MM-DD" v-model="profile.bithday" class="birth"></el-date-picker>
+                <el-date-picker type="date" placeholder="YYYY-MM-DD" v-model="profile.birthday" class="birth"></el-date-picker>
                 </el-col>
             </el-form-item>
             
@@ -44,30 +40,92 @@
 </template>
 
 <script>
+import { uploadFile } from '../storage.js'
+import { generateFileName } from '../util.js'
     export default{
         data(){
             return {
                 profile:{
-                    background: "13213",
+                    background:"",
+                    //id:"",
                     biography: "",
-                    bithday: "",
                     gender: "",
-                    job: "",
+                    occupation: "",
                     location: "",
+                    birthday: ""
                 },
-                email: this.$route.params.email
+                email: this.$route.params.email,
+                percentage: 0,
+                uploadStatus: ""
             }
+        },
+        mounted: function () {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const center = { lat, lng };
+                const defaultBounds = {
+                    north: center.lat + 0.1,
+                    south: center.lat - 0.1,
+                    east: center.lng + 0.1,
+                    west: center.lng - 0.1,
+                };
+                const options = {
+                    bounds: defaultBounds,
+                    componentRestrictions: { country: "au" },
+                    fields: ["address_components", "geometry", "icon", "name"],
+                    strictBounds: false,
+                    types: ["establishment"],
+                };
+                const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
+            });
+            this.$refs.selectImage.addEventListener('change', async () => {
+                this.uploadStatus = "";
+                const image = this.$refs.selectImage.files[0];
+                const ext = "." + image.type.replace(/(.*)\//g, '');
+                const fileName = generateFileName("background", ext);
+                const url = await uploadFile(this, image, fileName);
+                this.profile.background = url;
+                this.$refs.image.src = url;
+            });
+
+            this.getuserProfile();
         },
         methods:{
             back() {
                 this.$router.go(-1)
             },
-            Update() {
+            getuserProfile(){
+                console.log(this.email)
                 this.axios({
                     url: "/api/userProfile/" + this.email,
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data);
+                    if(response.data != null) {
+                        this.profile.biography = response.data.biography; 
+                        this.profile.gender = response.data.birthday;
+                        this.profile.occupation = response.data.job;
+                        this.profile.gender = response.data.gender;
+                        this.profile.location = response.data.location;
+                        this.profile.birthday = response.data.birthday;   
+                    }
+                   
+                    console.log(this.profile);
+                })
+            },
+            Update() {
+                console.log(this.profile)
+                this.axios({
+                    url: "/api/userProfile/update",
                     method: "put",
                     data: {
-                        "userProfile" : this.profile,
+                        "background" : this.background,
+                        "biography" : this.biography,
+                        "birthday" : this.birthday,
+                        "gender" : this.gender,
+                        "job" : this.occupation,
+                        "location" : this.location,
                     }
                 }).then(response => {
                     console.log(response.data)
@@ -79,35 +137,5 @@
     }
 </script>
 <style>
-.avatar-uploader .el-upload {
-    border: 1px dashed #d9d9d9;
-    border-radius: 6px;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-  }
-  .avatar-uploader .el-upload:hover {
-    border-color: #409EFF;
-  }
-  .avatar-uploader-icon {
-    font-size: 28px;
-    color: #8c939d;
-    width: 100px;
-    height: 100px;
-    line-height: 178px;
-    text-align: center;
-  }
-  .avatar {
-    width: 178px;
-    height: 178px;
-    display: block;
-  }
-  .birth{
-      width:100%;
-  }
-  .profile-detail {
-      position: relative;
-      width: 100%;
-      padding-left: 100%;
-  }
+
 </style>
