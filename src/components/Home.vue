@@ -51,22 +51,6 @@
                 </div>
                 
             </div>
-            <!--<div class="group-detail">
-                <div class="group-img">
-                    <el-image style="width: 100px; height: 100px" :src="url" :fit="fit" />
-                </div>
-                <div class="group-text">
-                    group2
-                </div>
-            </div>
-            <div class="group-detail">
-                <div class="group-img">
-                    <el-image style="width: 100px; height: 100px" :src="url" :fit="fit" />
-                </div>
-                <div class="group-text">
-                    group3
-                </div>
-            </div>-->
         </div>
     </div>
 </template>
