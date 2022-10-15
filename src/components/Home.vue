@@ -5,7 +5,7 @@
             <div class="event-show">
                 <div class="event-left" >
         
-                    <div  v-for="item in Show1" @click="gotoEventdetail">
+                    <div  v-for="item in Show1" @click="gotoEventdetail(item.id)">
                         <el-image style="width: 500px; height: 300px" :src="item.backgroundImage" />
                         <P>{{item.name}}</P>
                         <p>{{item.location}}</p>
@@ -26,7 +26,7 @@
             </div>
             <div class="recommend-events-show">
                 
-                <article v-for="item in Show2" class="recommend-events-left">
+                <article v-for="item in Show2" class="recommend-events-left" @click="gotoEventdetail(item.id)">
                     <div class="event-img">
                         <el-image style="width: 150px; height: 150px" :src="item.backgroundImage" />
                     </div>
@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="recommend-groups">
-            <div class="group-detail" v-for="group in groups">
+            <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(id)">
                 <div class="group-img">
                     <el-image style="width: 100px; height: 100px" :src="group.backgroundImage" />
                 </div>
@@ -76,9 +76,7 @@
         data(){
             return {
                 groups:[
-                    {gid: 1, name:'group1'},
-                    {gid: 2, name:'group2'},
-                    {gid: 3, name:'group3'},
+                    
                 ],
                 events:[
                     
@@ -129,7 +127,10 @@
                 })
             },
             gotoEventdetail(id){
-                this.this.$router.push('/eventdetail/'+id)
+                this.$router.push('/eventdetail/' + id)
+            },
+            gotoGroupdetail(id){
+                this.$router.push('/GroupDetail/' + id)
             },
             created1() {
                 
