@@ -42,7 +42,7 @@
             </div>
         </div>
         <div class="recommend-groups">
-            <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(id)">
+            <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(group.id)">
                 <div class="group-img">
                     <el-image style="width: 100px; height: 100px" :src="group.backgroundImage" />
                 </div>
