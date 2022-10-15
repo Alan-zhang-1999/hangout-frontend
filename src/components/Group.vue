@@ -24,6 +24,7 @@
                 <p>{{group.location}}</p>
             </div>
         </div>
+        <h2 v-else>There are no groups you want.</h2>
         <div v-if="guessYouLike.length != 0">
             <h2>Guess You Like</h2>
             <div v-for="group in guessYouLike" class="group-container" @click="getGroupDetail(group.id)">
