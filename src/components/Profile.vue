@@ -4,26 +4,27 @@
             <div class="profile-article">
                 <div class="base">
                     <div class="avator">
-                        <n-avatar round
-                                  :size="100"
-                                  src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />
+                        <el-avatar>{{username}}</el-avatar>
                     </div>
                     <div class="info">
-                        <div class="name"><p>{{this.user.email}}</p></div>
-                        <div class="name"><p>{{id}}</p></div>
-                        <div class="name"><p>{{birthday}}</p></div>
+                        <div class="name"><p>{{viewUser.email}}</p></div>
+                        <div class="name"><p>{{viewUser.id}}</p></div>
+                        <div class="name"><p>{{viewUser.birthday}}</p></div>
                     </div>
 
-                    <el-icon  @click="editProfile" >
+                    <el-icon  v-if="isMyProfile==true" @click="editProfile" >
                         <Edit />
                     </el-icon>
+                    <el-icon v-if="isMyProfile!=true" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chatWithHim()"><ChatDotRound /></el-icon>
+
 
                 </div>
             </div>
             <div class="follow">
                 <el-button type="info">Follower {{followerNum}}</el-button>
                 <el-button type="info">Following {{followNum}}</el-button>
-                <el-button type="info">Interests </el-button>
+                <!-- <el-button type="info">Interests </el-button> -->
             </div>
             <div class="buttons">
                
@@ -65,16 +66,16 @@
                         </div>
                     </n-tab-pane>
                     <n-tab-pane name="calendar" tab="Calendar">
-                        <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-
-                            <!-- <img src="{{ event.img}}"/> -->
-                            <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
-                            <p>Location: {{event.location}}</p>
-
-                            <!-- <p>Topic: {{event.topic}}</p>
-    <p>Description: {{event.information}}</p> -->
-                        </div>
+                        <el-calendar>
+                            <template #date-cell="{data}">
+                                <p>
+                                    {{ data.day.split('-').slice(1).join('-') }}<br />
+                                    <div v-for="name in dealMyDate(data.day)">
+                                        {{ name }}<br />
+                                    </div>
+                                </p>
+                            </template>
+                        </el-calendar>
                     </n-tab-pane>
                 </n-tabs>
 
@@ -91,57 +92,124 @@
     //    birthday: "123"
     //})
 
-    import { checkLoginStatus, getUserId, formatDate } from '../util.js'
+    import { connectStorageEmulator } from '@firebase/storage'
+import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 
 
     export default {
 
         data(){
             return {
-                name:"xx",
-                id:"132",
-                birthday: "123",
-                circleUrl: "https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png",
-                squareUrl: "https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png",
-                sizeList: ["large"],
                 events: [],
-                keyword: "",
                 user: {},
+                viewUser:{},
                 eventId: 0,
                 followNum: "",
                 followerNum: "",
+                userId: "",
+                isMyProfile: false,
+                profile: "",
+                username: ''
             }
         },
-        mounted: async function () {
-            this.user = await checkLoginStatus();
-            if (this.user.loginStatus) {
-                this.id = await getUserId(this.user.email);
-            }
-            this.getEvents();
-            this.getFollowNum();
-            this.getFollowerNum();
+        mounted: function () {
+            this.initData()
         },
         watch: {
             $route() {
-                this.getEvents();
-                this.getFollowNum();
-                this.getFollowerNum();
+                this.initData()    
             }
         },
         methods: {
-            toCreateEvent() {
-                this.$router.push('/createEvent')
+            dealMyDate(v) {
+            var ret = [];
+            for (let i = 0; i < this.events.length; i++) {
+                if (this.formatDate(this.events[i].time).split(" ")[0] == v) {
+                    ret.push(this.events[i].name);
+                }
+            }
+            //maximun two events in a calendar day
+            return ret.slice(0, 2);
+        },
+            async initData() {
+                this.userId = this.$route.params.userId
+                this.user = await checkLoginStatus();
+                console.log("))))", this.user)
+                if (this.user.loginStatus) {
+                    this.user.id = await getUserId(this.user.email);
+                }
+                console.log("this.userId this.user.id", this.userId, this.user.id, this.userId == this.user.id)
+                if (this.userId == this.user.id){
+                    this.isMyProfile = true
+                    this.viewUser = this.user
+                    console.log("###", this.viewUser)
+                } else {
+                    this.isMyProfile = false
+                    this.viewUser = await this.getUserById()
+                    console.log("@@@", this.viewUser)
+                }
+                await this.getUserProfile(this.viewUser.email)
+                this.username = this.viewUser.username
+                console.log("profile", this.viewUser, this.user)
+                this.getEvents();
+                this.getFollowNum();
+                this.getFollowerNum();
             },
-            serachEvent() {
+            // formatDate (fmt) {
+            //     const date = new Date()
+            //     var o = {
+            //         "M+": date.getMonth() + 1, // 月份
+            //         "d+": date.getDate(), // 日
+            //         "h+": date.getHours(), // 小时
+            //         "m+": date.getMinutes(), // 分
+            //         "s+": date.getSeconds(), // 秒
+            //         "q+": Math.floor((date.getMonth() + 3) / 3), // 季度
+            //         "S": date.getMilliseconds() // 毫秒
+            //     };
+            //     if (/(y+)/.test(fmt))
+            //         fmt = fmt.replace(RegExp.$1, (date.getFullYear() + "").substr(4 - RegExp.$1.length));
+            //     for (var k in o)
+            //         if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            //             return fmt;
+            // },
+            chatWithHim() {
+                console.log("chatWithHim")
+                console.log(this.user.id, this.viewUser.id)
                 this.axios({
-                    url: "/api/event/search",
-                    method: "get",
-                    params: {
-                        "keyword": this.keyword
+                    url: "/api/message/sendMessage",
+                    method: "post",
+                    data: {
+                        "userId": this.user.id,
+                        "toUserId": this.viewUser.id,
+                        "content": "Let's have a chat!",
+                        "time": formatDate(new Date())
                     }
                 }).then(response => {
-                    this.events = response.data
+                    console.log(response.data)
+                    this.$router.push('/Im')
                 })
+            },
+            getUserProfile(email) {
+                this.axios({
+                    url: "/api/userProfile/" + email,
+                    method: "get",
+                }).then(response => {
+                    console.log(response.data);
+                    this.profile = response.data
+                })
+            },
+            getUserById(userId) {
+                return this.axios({
+                    url: "/api/getUserById/"+this.userId,
+                    method: "get"
+                }).then(res=> {
+                    // this.viewUser = res.data
+                    console.log("getUserById", this.viewUser)
+                    return res.data
+                })
+            },
+            toCreateEvent() {
+                this.$router.push('/createEvent')
             },
             editProfile(){
                 this.$router.push({
@@ -161,16 +229,19 @@
                 })
             },
             getFollowNum() {
+                console.log("getFollowNum", this.viewUser.id)
                 this.axios({
-                    url: "/api/follow/followCounts/"+this.id,
+                    url: "/api/follow/followCounts/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
                     this.followNum = response.data;
                 })
             },
             getFollowerNum() {
+                console.log("getFollowerNum", this.viewUser.id)
+
                 this.axios({
-                    url: "/api/follow/followerCounts/"+this.id,
+                    url: "/api/follow/followerCounts/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
                     this.followerNum = response.data;
@@ -194,7 +265,7 @@
             },
             getJoinedEvents() {
                 this.axios({
-                    url: "/api/event/joined/" + this.user.email,
+                    url: "/api/event/joined/" + this.viewUser.email,
                     method: "get",
                 }).then(response => {
                     this.events = response.data;

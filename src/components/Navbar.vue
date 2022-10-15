@@ -16,7 +16,8 @@
                     <router-link style="text-decoration: none; color: black;" to="/Events/-">Events</router-link>
                 </el-menu-item>
                 <el-menu-item>
-                    <el-input v-model="input_text" placeholder="Search" class="input-with-select" style="width: 500px">
+                    <el-input clearable v-model="input_text" placeholder="Search" class="input-with-select"
+                        style="width: 500px">
                         <template #prepend>
                             <el-select v-model="select" placeholder="select" style="width: 100px">
                                 <el-option label="Group" value="Group" />
@@ -24,60 +25,65 @@
                             </el-select>
                         </template>
                         <template #append>
-                            <el-button @click="search"><el-icon><Search color="#409EFF"/></el-icon></el-button>
+                            <el-button @click="search">
+                                <el-icon>
+                                    <Search color="#409EFF" />
+                                </el-icon>
+                            </el-button>
                         </template>
                     </el-input>
                 </el-menu-item>
             </el-row>
             <div style="position: absolute; right: 0;">
                 <el-row v-if="loginStatus">
-                <el-menu-item>
-                    <el-dropdown>
-                        <el-avatar>{{username.slice(0, 3)}}</el-avatar>
-                        <template #dropdown>
-                            <el-dropdown-menu>
-                                <el-dropdown-item>
-                                    <!-- <div>
+                    <el-menu-item>
+                        <el-dropdown>
+                            <el-avatar>{{username.slice(0, 3)}}</el-avatar>
+                            <template #dropdown>
+                                <el-dropdown-menu>
+                                    <el-dropdown-item>
+                                        <!-- <div>
                                         <a href="/#/Im" style="text-decoration: none; color: black;">Chat</a>
                                     </div> -->
-                                    <router-link style="text-decoration: none; color: black;" to="/Im">Chat
-                                    </router-link>
-                                </el-dropdown-item>
-                                <el-dropdown-item>
-                                    <!-- <div>
+                                        <router-link style="text-decoration: none; color: black;" to="/Im">Chat
+                                        </router-link>
+                                    </el-dropdown-item>
+                                    <el-dropdown-item>
+                                        <!-- <div>
                                         <a href="/#/Profile" style="text-decoration: none; color: black;">Profile</a>
                                     </div> -->
-                                    <router-link style="text-decoration: none; color: black;" to="/Profile">Profile
+                                    <router-link style="text-decoration: none; color: black;" :to="'/Profile/'+userId">Profile
                                     </router-link>
                                 </el-dropdown-item>
                                 <el-dropdown-item>
                                     <!-- <div>
                                         <a href="/#/Home" style="text-decoration: none; color: black;">Logout</a>
                                     </div> -->
-                                    <div type="primary" @click="logout" class="btn-sign" size="medium">Logout</div>
-                                </el-dropdown-item>
-                            </el-dropdown-menu>
-                        </template>
-                    </el-dropdown>
-                </el-menu-item>
-            </el-row>
-            <el-row type="flex" justify="end" v-else>
-                <el-menu-item>
-                    <router-link style="text-decoration: none; color: black;" to="/Login">Login</router-link>
-                </el-menu-item>
-                <el-menu-item>
-                    <router-link style="text-decoration: none; color: black;" to="/SignUp">SignUp</router-link>
-                </el-menu-item>
-            </el-row>
+                                        <div type="primary" @click="logout" class="btn-sign" size="medium">Logout</div>
+                                    </el-dropdown-item>
+                                </el-dropdown-menu>
+                            </template>
+                        </el-dropdown>
+                    </el-menu-item>
+                </el-row>
+                <el-row type="flex" justify="end" v-else>
+                    <el-menu-item>
+                        <router-link style="text-decoration: none; color: black;" to="/Login">Login</router-link>
+                    </el-menu-item>
+                    <el-menu-item>
+                        <router-link style="text-decoration: none; color: black;" to="/SignUp">SignUp</router-link>
+                    </el-menu-item>
+                </el-row>
             </div>
-            
+
         </el-menu>
     </div>
     <router-view></router-view>
 </template>
 
 <script>
-import { checkLoginStatus } from '../util.js'
+import { async } from '@firebase/util';
+import { checkLoginStatus, getUserId } from '../util.js'
 // import { Search } from '@element-plus/icons-vue'
 export default {
     data() {
@@ -92,30 +98,43 @@ export default {
             job: "",
             location: "",
             username: "",
+            email: "",
+            userId: ""
         }
     },
     name: "nav1",
     mounted: function () {
-        this.checkLoginStatus();
+        this.checkLogin();
     },
     watch: {
         $route() {
-            this.checkLoginStatus();
+            this.checkLogin();
         }
     },
     methods: {
-        checkLoginStatus() {
-            checkLoginStatus().then((res) => {
+        checkLogin() {
+            checkLoginStatus().then(async (res) => {
                 this.loginStatus = res.loginStatus;
                 this.username = res.username;
+                console.log("loginStatus", this.loginStatus)
+
+                if (this.loginStatus) {
+                    this.email = window.sessionStorage.getItem("userEmail")
+                    this.userId = await getUserId(this.email);
+                    console.log("email", this.email)
+                }
             })
         },
         search() {
-            if(this.select == "Group") {
-                this.$router.push("/Group/" + this.input_text)
-            } else {
-                this.$router.push("/Events/" + this.input_text)
+            if (this.input_text != "") {
+                if (this.select == "Group") {
+                    this.$router.push("/Group/" + this.input_text)
+                } else {
+                    this.$router.push("/Events/" + this.input_text)
+                }
+                this.input_text = "";
             }
+
         },
         logout() {
             this.axios({
@@ -137,7 +156,7 @@ export default {
             this.$router.push('/Login')
         },
         goProfile() {
-            this.$router.push('/Profile')
+            this.$router.push('/Profile/'+this.email)
         },
         goChat() {
             this.$router.push('/Im')
@@ -147,8 +166,8 @@ export default {
 </script>
 <style>
 .nav-box {
-	position: sticky;
-	top: 0;
+    position: sticky;
+    top: 0;
     z-index: 100;
     border: 0px 0px 1px 0px solid;
 }
@@ -170,6 +189,6 @@ export default {
 }
 
 .input-with-select .el-input-group__prepend {
-  background-color: var(--el-fill-color-blank);
+    background-color: var(--el-fill-color-blank);
 }
 </style>

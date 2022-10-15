@@ -3,7 +3,7 @@
         <el-row>
             <el-form ref="form">
                 <el-form-item>
-                    <el-input placeholder="search event" v-model="keyword">
+                    <el-input clearable placeholder="search event" v-model="keyword">
                     </el-input>
                 </el-form-item>
             </el-form>
@@ -62,7 +62,11 @@
             if (this.user.loginStatus) {
                 this.id = await getUserId(this.user.email);
             }
-            this.getEvents();
+            if (this.$route.params.input_text!='-'){
+                this.searchEvent(this.$route.params.input_text);
+            } else {
+                this.getEvents();
+            }
         },
         watch: {
             $route() {
@@ -78,17 +82,21 @@
                 this.$router.push('/CreateEvent')
             },
             searchEvent(keyword) {
-                this.axios({
-                    url: "/api/event/search",
-                    method: "get",
-                    params: {
-                        "keyword": keyword
-                    }
-                }).then(response => {
-                    console.log("search", keyword)
-                    this.events = response.data.related
-                    this.guessYouLike = response.data.guessYouLike
-                })
+                if (keyword != "") {
+                    this.axios({
+                        url: "/api/event/search",
+                        method: "get",
+                        params: {
+                            "keyword": keyword
+                        }
+                    }).then(response => {
+                        console.log("search", keyword)
+                        this.events = response.data.related
+                        this.guessYouLike = response.data.guessYouLike
+                    })
+                    this.keyword = "";
+                }
+                
             },
             getEventDetail(id) {
                 this.$router.push('/eventdetail/' + id)
@@ -100,6 +108,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getPastEvents() {
                 this.axios({
@@ -108,6 +117,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getCurrentEvents() {
                 this.axios({
@@ -116,6 +126,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             getJoinedEvents() {
                 this.axios({
@@ -124,6 +135,7 @@
                 }).then(response => {
                     this.events = response.data;
                 })
+                this.guessYouLike = [];
             },
             formatDate(date) {
                 return formatDate(date)

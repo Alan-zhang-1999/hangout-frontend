@@ -5,22 +5,24 @@
             <el-card style="width: 300px; height: 600px; color: #333">
                 <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">Online users<span style="font-size: 12px">（click icon to chat）</span></div>
                 <div style="padding: 10px 0" v-for="user in users" :key="user.email">
-                    <span>{{ user.username }}</span>
+                  <div>
+                    <span v-if="user.online" >{{ user.username }}</span>
                     <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
                              @click="chooseChatUser(user);"><ChatDotRound /></el-icon>
-                    <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                             @click="chooseChatUser(user);"><ChatRound /></el-icon>
-                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email">chatting...</span>
+                    <!-- <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatRound /></el-icon> -->
+                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email && user.online">chatting...</span>
+                  </div>
                 </div>
 
                 <div style="padding-bottom: 10px; border-bottom: 1px solid #ccc">Offline users<span style="font-size: 12px">（click icon to chat）</span></div>
                 <div style="padding: 10px 0" v-for="user in users" :key="user.email">
-                    <span>{{ user.username }}</span>
-                    <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
-                             @click="chooseChatUser(user);"><ChatDotRound /></el-icon>
-                    <el-icon v-else class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                    <span v-if="user.online==false" >{{ user.username }}</span>
+                    <!-- <el-icon v-if="user.online" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
+                             @click="chooseChatUser(user);"><ChatDotRound /></el-icon> -->
+                    <el-icon v-if="user.online==false" class="el-icon-share" style="margin-left: 10px; font-size: 16px; cursor: pointer"
                              @click="chooseChatUser(user);"><ChatRound /></el-icon>
-                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email">chatting...</span>
+                    <span style="font-size: 12px;color: limegreen; margin-left: 5px" v-if="user.email === chatUser.email && user.online==false">chatting...</span>
                 </div>
 
             </el-card>
@@ -58,7 +60,8 @@
         content: "",
         messages: [],
         htmlContent: '',
-        userEmail: ''
+        userEmail: '',
+        chatUserName: ""
       }
     },
     created() {
@@ -69,7 +72,7 @@
             this.chatUser = user
             this.axios({
                 url: "/api/message/allMessages/" + this.userEmail,
-                post: "get"
+                method: "get"
             }).then(response => {
                 for(var key in response.data) {
                     var mes = response.data[key]
@@ -142,7 +145,7 @@
           html = "<div class=\"el-row\" style=\"padding: 5px 0\">\n" +
               "  <div class=\"el-col el-col-2\" style=\"text-align: right\">\n" +
               "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-              "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+              "    <el-avatar>" + this.chatUser.username + "</el-avatar>\n" +
               "  </span>\n" +
               "  </div>\n" +
               "  <div class=\"el-col el-col-22\" style=\"text-align: left; padding-left: 10px\">\n" +

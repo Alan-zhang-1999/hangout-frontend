@@ -3,7 +3,7 @@
         <el-row>
             <el-form ref="form">
                 <el-form-item>
-                    <el-input placeholder="search group" v-model="keyword">
+                    <el-input clearable placeholder="search group" v-model="keyword">
                     </el-input>
                 </el-form-item>
 
@@ -51,7 +51,11 @@ export default {
     },
     mounted: async function () {
         this.user = await checkLoginStatus();
-        this.loadAllGroups();
+        if (this.$route.params.input_text!='-'){
+                    this.searchGroup(this.$route.params.input_text);
+                } else {
+                    this.loadAllGroups();
+                }
     },
     name: "Group",
     watch: {
@@ -72,22 +76,26 @@ export default {
                 this.groups = response.data;
                 // console.log(response.data)
             })
+            this.guessYouLike = [];
         },
         toCreateGroup() {
             this.$router.push('/CreateGroup')
         },
         searchGroup(keyword) {
-            this.axios({
-                url: "/api/group/search",
-                method: "get",
-                params: {
-                    "keyword": keyword
-                }
-            }).then(response => {
-                this.groups = response.data.related
-                this.guessYouLike = response.data.guessYouLike
-                console.log("search", keyword)
-            })
+            if (keyword != "") {
+                this.axios({
+                    url: "/api/group/search",
+                    method: "get",
+                    params: {
+                        "keyword": keyword
+                    }
+                }).then(response => {
+                    this.groups = response.data.related
+                    this.guessYouLike = response.data.guessYouLike
+                    console.log("search", keyword)
+                })
+                this.keyword = "";
+            }
         },
         getGroupDetail(id) {
             console.log(id)
