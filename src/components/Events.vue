@@ -62,7 +62,11 @@
             if (this.user.loginStatus) {
                 this.id = await getUserId(this.user.email);
             }
-            this.getEvents();
+            if (this.$route.params.input_text!='-'){
+                this.searchEvent(this.$route.params.input_text);
+            } else {
+                this.getEvents();
+            }
         },
         watch: {
             $route() {
@@ -78,18 +82,21 @@
                 this.$router.push('/CreateEvent')
             },
             searchEvent(keyword) {
-                this.axios({
-                    url: "/api/event/search",
-                    method: "get",
-                    params: {
-                        "keyword": keyword
-                    }
-                }).then(response => {
-                    console.log("search", keyword)
-                    this.events = response.data.related
-                    this.guessYouLike = response.data.guessYouLike
-                })
-                this.keyword = "";
+                if (keyword != "") {
+                    this.axios({
+                        url: "/api/event/search",
+                        method: "get",
+                        params: {
+                            "keyword": keyword
+                        }
+                    }).then(response => {
+                        console.log("search", keyword)
+                        this.events = response.data.related
+                        this.guessYouLike = response.data.guessYouLike
+                    })
+                    this.keyword = "";
+                }
+                
             },
             getEventDetail(id) {
                 this.$router.push('/eventdetail/' + id)
