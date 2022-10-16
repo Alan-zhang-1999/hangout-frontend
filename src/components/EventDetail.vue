@@ -31,7 +31,7 @@
                     <!--<n-avatar round
                 :size="30"
                 src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />-->
-                    <el-avatar @click.native="goProfile(user.id)" :src="this.user.background"></el-avatar>
+                    <el-avatar @click.native="goProfile(user.id)" :src="this.user.background">{{user.username.slice(0, 3)}}</el-avatar>
                 </div>
                 <div class="name">{{user.email}}</div>
             </div>
@@ -143,6 +143,7 @@ export default {
                     "eventId": id
                 }
             }).then(response => {
+                console.log("!!!!", response.data);
                 this.users = response.data;
             })
         },

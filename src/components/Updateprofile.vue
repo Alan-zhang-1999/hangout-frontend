@@ -5,13 +5,15 @@
         <el-button type="primary" @click="back">Back</el-button>
         <div class="profile-detail">
             <el-form-item label="Avatar">
-                    <img src="profile.background" alt="Avatar" ref="image" id="img" />
-                    
-                    <input type="file" accept="image/*" ref="selectImage" />
-                    <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
+                <n-avatar round
+                    :size="100"
+                    :src="this.profile.background"
+                    fallback-src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" ref="image" id="img"/>                    
+                <input type="file" accept="image/*" ref="selectImage" />
+                <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
             </el-form-item>
             <el-form-item label="Biography">
-                <input type="textarea" v-model="profile.biography"/>
+                <input type="textarea" v-model="profile.biography" class="textinput" />
             </el-form-item>
             <el-form-item label="Gender">
                 <el-radio-group v-model="profile.gender">
@@ -20,7 +22,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="Occupation">
-                <input v-model="profile.occupation"/>
+                <input v-model="profile.occupation" class="textinput" />
             </el-form-item>
             <el-form-item label="Location">
                 <input type="text" v-model="profile.location" placeholder="" ref="address" class="textinput" />
@@ -123,28 +125,50 @@ import { checkLoginStatus, generateFileName, getUserId } from '../util.js'
                 })
             },
             Update() {
-                this.axios({
-                    url: "/api/userProfile/update",
-                    method: "put",
-                    data: {
-                        "background" : this.profile.background,
-                        "id" : this.profile.id,
-                        "biography" : this.profile.biography,
-                        "birthday" : this.profile.birthday,
-                        "gender" : this.profile.gender,
-                        "job" : this.profile.occupation,
-                        "location" : this.profile.location,
-                    }
-                }).then(async (response) => {
-                    console.log("update", response.data)
-                    
-                    this.$router.push('/Profile/' + response.data.id)
-                })
+                if (this.profile.biography.length == 0 || this.profile.birthday.length == 0 || this.profile.gender == 0 || this.profile.occupation.length == 0 || this.profile.location.length == 0) {
+                    this.$message({
+                        message: 'Please fill in all the information',
+                        type: 'warning',
+                        duration: 1500,
+                        offset: 80
+                    });
+                } else if (this.profile.background.length == 0 ) {
+                    this.$message({
+                        message: 'Please upload your background',
+                        type: 'warning',
+                        duration: 1500,
+                        offset: 80
+                    });
+                } else {
+                    this.axios({
+                        url: "/api/userProfile/update",
+                        method: "put",
+                        data: {
+                            "background" : this.profile.background,
+                            "id" : this.profile.id,
+                            "biography" : this.profile.biography,
+                            "birthday" : this.profile.birthday,
+                            "gender" : this.profile.gender,
+                            "job" : this.profile.occupation,
+                            "location" : this.profile.location,
+                        }
+                    }).then(async (response) => {
+                        this.$message({
+                            message: 'Update successfully',
+                            type: 'success',
+                            duration: 1500,
+                            offset: 80
+                        });
+                        this.$router.push('/Profile/' + response.data.id)
+                    })
+
+                } 
+                
             }
         }
     }
 </script>
-<style>
+<style scoped>
     .profile-detail{
         width: 40%;
         margin-left: 30%;
