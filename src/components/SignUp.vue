@@ -53,7 +53,10 @@
                                 "password": this.password
                             }
                         }).then(() => {
-                            this.$router.push('/Home')
+                            this.$router.push({
+                                name:'Edit',
+                                params: {email: this.email}
+                            })
                         })
                     } else {
                         this.$message({
