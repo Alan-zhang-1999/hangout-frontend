@@ -132,11 +132,9 @@ export default {
             async initData() {
                 this.userId = this.$route.params.userId
                 this.user = await checkLoginStatus();
-                console.log("))))", this.user)
                 if (this.user.loginStatus) {
                     this.user.id = await getUserId(this.user.email);
                 }
-                console.log("this.userId this.user.id", this.userId, this.user.id, this.userId == this.user.id)
                 if (this.userId == this.user.id){
                     this.isMyProfile = true
                    
@@ -151,9 +149,7 @@ export default {
                 console.log(this.viewUser.email)
                 this.profile = await this.getUserProfile(this.viewUser.email)
                 this.userGroups = await this.getUserGroups()
-                console.log("this.profile ", this.profile)
                 this.username = this.viewUser.username
-                console.log("profile", this.viewUser, this.user)
                 this.getEvents();
                 this.getPastEvents();
                 this.getCurrentEvents();
@@ -162,7 +158,6 @@ export default {
                 this.getUserGroups();
             },
             chatWithHim() {
-                console.log("chatWithHim")
                 console.log(this.user.id, this.viewUser.id)
                 this.axios({
                     url: "/api/message/sendMessage",
