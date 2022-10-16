@@ -17,11 +17,12 @@
         </el-row>
 
         <div class="show" v-if="events.length != 0">
-            <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+            <article v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+                <img :src="event.backgroundImage" alt = 'event img'/>
                 <p>Name: {{ event.name }}</p>
                 <p>Date: {{formatDate(event.time)}}</p>
                 <p>Location: {{event.location}}</p>
-            </div>
+            </article>
         </div>
         <h2 v-else>There are no events you want.</h2>
         <div class="show" v-if="guessYouLike.length != 0">
@@ -116,10 +117,10 @@
         overflow: hidden;
     }
     .event-container {
-
+        position: relative;
         float: left;
 		width: 400px;
-		height: 200px;
+		height: 300px;
         margin:10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
         border-radius:10px;    

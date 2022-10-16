@@ -101,20 +101,18 @@ import { generateFileName, getUserId } from '../util.js'
                 this.axios({
                     url: "/api/userProfile/" + this.email,
                     method: "get",
-                }).then(async (response) => {
+                }).then(response => {
                     console.log(response.data);
                     if(response.data != null) {
-                        this.user = await checkLoginStatus();
+                        
                         this.profile.biography = response.data.biography; 
-                        this.profile.id = this.user.id;
+                        this.profile.id = response.data.id;//this.user.id;
                         this.profile.background = response.data.background;
                         this.profile.occupation = response.data.job;
                         this.profile.gender = response.data.gender;
                         this.profile.location = response.data.location;
                         this.profile.birthday = response.data.birthday; 
-                        this.$refs.image.src = this.profile.background;
-                        
-                        console.log("check",this.profile.id);  
+                        this.$refs.image.src = this.profile.background; 
                     }
                     console.log("check",this.profile.id); 
                     console.log(this.profile);
