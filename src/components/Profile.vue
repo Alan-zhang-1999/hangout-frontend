@@ -147,6 +147,7 @@ export default {
                     this.viewUser = await this.getUserById()
                     console.log("@@@", this.viewUser)
                 }
+                console.log(this.viewUser.email)
                 await this.getUserProfile(this.viewUser.email)
                 await this.getUserGroups();
                 this.username = this.viewUser.username

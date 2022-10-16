@@ -42,7 +42,7 @@
 
 <script>
 import { uploadFile } from '../storage.js'
-import { generateFileName } from '../util.js'
+import { generateFileName, getUserId } from '../util.js'
     export default{
         data(){
             return {
@@ -101,20 +101,22 @@ import { generateFileName } from '../util.js'
                 this.axios({
                     url: "/api/userProfile/" + this.email,
                     method: "get",
-                }).then(response => {
+                }).then(async (response) => {
                     console.log(response.data);
                     if(response.data != null) {
+                        this.user = await checkLoginStatus();
                         this.profile.biography = response.data.biography; 
-                        this.profile.id = response.data.id;
+                        this.profile.id = this.user.id;
                         this.profile.background = response.data.background;
                         this.profile.occupation = response.data.job;
                         this.profile.gender = response.data.gender;
                         this.profile.location = response.data.location;
                         this.profile.birthday = response.data.birthday; 
                         this.$refs.image.src = this.profile.background;
-                        console.log(this.$refs.image.src);  
+                        
+                        console.log("check",this.profile.id);  
                     }
-                   
+                    console.log("check",this.profile.id); 
                     console.log(this.profile);
                 })
             },
@@ -132,10 +134,10 @@ import { generateFileName } from '../util.js'
                         "job" : this.profile.occupation,
                         "location" : this.profile.location,
                     }
-                }).then(response => {
+                }).then(async (response) => {
                     console.log(response.data)
                     
-                    this.back()
+                    this.$router.push('/Profile/' + response.data.id)
                 })
             }
         }
