@@ -10,11 +10,11 @@ import {
     // create naive ui
     create,
     // component
-    NButton, NCard, NTabs, NTab, NTabPane, NAvatar
+    NButton, NCard, NTabs, NTab, NTabPane, NAvatar, NEllipsis
 } from 'naive-ui'
 
 const naive = create({
-    components: [NButton, NCard, NTabs, NTab, NTabPane, NAvatar]
+    components: [NButton, NCard, NTabs, NTab, NTabPane, NAvatar, NEllipsis]
 })
 // Vue.prototype.$axios = Axios
 // Axios.defaults.baseURL = "/api"
