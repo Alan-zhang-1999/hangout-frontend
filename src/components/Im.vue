@@ -46,7 +46,7 @@
     </div>
   </template>
   <script>
-
+  import { checkLoginStatus } from '../util.js'
   let socket;
   export default {
     name: "Im",
@@ -61,6 +61,12 @@
         htmlContent: '',
         userEmail: '',
         chatUserName: ""
+      }
+    },
+    mounted: async function () {
+      this.user = await checkLoginStatus();
+      if (!this.user.loginStatus) {
+        this.$router.push('/login');
       }
     },
     created() {
@@ -132,7 +138,7 @@
               "  </div>\n" +
               "  <div class=\"el-col el-col-2\">\n" +
               "  <span class=\"el-avatar el-avatar--circle\" style=\"height: 40px; width: 40px; line-height: 40px;\">\n" +
-              "    <img src=\"https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png\" style=\"object-fit: cover;\">\n" +
+                "    <el-avatar>" + this.user.username + "</el-avatar>\n" +
               "  </span>\n" +
               "  </div>\n" +
               "</div>";

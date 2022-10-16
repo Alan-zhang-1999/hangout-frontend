@@ -84,19 +84,31 @@ export default {
             this.$router.go(-1)
         },
         createGroup() {
-            this.axios({
-                url: "/api/createGroup",
-                method: "post",
-                data: {
-                    "name": this.group.name,
-                    "location": this.group.location,
-                    "information": this.group.information,
-                    "backgroundImage": this.group.url
-                }
-            }).then(response => {
-                console.log(response.data.message)
-                this.back();
-            })
+            if (this.group.name.length == 0 || this.group.location.length == 0 || this.group.information.length == 0) {
+                this.$message({
+                    message: 'Please fill in all the blanks',
+                    type: 'error'
+                });
+            } else if (this.group.url.length == 0) {
+                this.$message({
+                    message: 'Please upload a image',
+                    type: 'error'
+                });
+            } else {
+                this.axios({
+                    url: "/api/createGroup",
+                    method: "post",
+                    data: {
+                        "name": this.group.name,
+                        "location": this.group.location,
+                        "information": this.group.information,
+                        "backgroundImage": this.group.url
+                    }
+                }).then(response => {
+                    console.log(response.data.message)
+                    this.back();
+                })
+            }
         }
     }
 

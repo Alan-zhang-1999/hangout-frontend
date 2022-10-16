@@ -47,7 +47,7 @@
                         </el-calendar>
                     </n-tab-pane>
                     <n-tab-pane name="MyGroups" tab="MyGroups">
-                        <div v-for="group in userGroups" class="event-container" @click="getEventDetail(group.id)">
+                        <div v-for="group in userGroups" class="event-container" @click="getGroupDetail(group.id)">
 
                             <!-- <img src="{{ group.img}}"/> -->
                             <p>Name: {{ group.name }}</p>
@@ -104,7 +104,8 @@ export default {
                 userId: "",
                 isMyProfile: false,
                 profile: "",
-                username: ''
+                username: '',
+                userGroups: []
             }
         },
         mounted: function () {
@@ -146,6 +147,7 @@ export default {
                     console.log("@@@", this.viewUser)
                 }
                 await this.getUserProfile(this.viewUser.email)
+                await this.getUserGroups();
                 this.username = this.viewUser.username
                 console.log("profile", this.viewUser, this.user)
                 this.getEvents();
@@ -202,6 +204,9 @@ export default {
             },
             getEventDetail(eventId) {
                 this.$router.push('/eventdetail/' + eventId)
+            },
+            getGroupDetail(groupId) {
+                this.$router.push('/GroupDetail/' + groupId)
             },
             getEvents() {
                 this.axios({
