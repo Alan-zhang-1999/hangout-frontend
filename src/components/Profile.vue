@@ -139,25 +139,40 @@ export default {
                 this.getEvents();
                 this.getPastEvents();
                 this.getCurrentEvents();
-                this.getFollowNum();
-                this.getFollowerNum();
                 this.getUserGroups();
             },
             chatWithHim() {
                 console.log(this.user.id, this.viewUser.id)
                 this.axios({
-                    url: "/api/message/sendMessage",
-                    method: "post",
-                    data: {
-                        "userId": this.user.id,
-                        "toUserId": this.viewUser.id,
-                        "content": "Let's have a chat!",
-                        "time": formatDate(new Date())
+                    url: "/api/message/allMessages/" + this.viewUser.email,
+                    method: "get"
+                }).then(res => {
+                    this.chatUser = false
+                    for (var m in res.data){
+                        var mes = res.data[m]
+                        if (mes.email==this.viewUser.email || mes.toEmail==this.viewUser.email){
+                            this.chatUser = true
+                            break
+                        }
                     }
-                }).then(response => {
-                    console.log(response.data)
-                    this.$router.push('/Im')
+                    if (this.chatUser){
+                        this.$router.push('/Im')
+                    } else {
+                    this.axios({
+                        url: "/api/message/sendMessage",
+                        method: "post",
+                        data: {
+                            "userId": this.user.id,
+                            "toUserId": this.viewUser.id,
+                            "content": "Let's have a chat!",
+                            "time": formatDate(new Date())
+                        }
+                        }).then(response => {
+                            this.$router.push('/Im')
+                        })
+                    }
                 })
+                
             },
             getUserProfile(email) {
                 return this.axios({
@@ -199,26 +214,6 @@ export default {
                     method: "get",
                 }).then(response => {
                     this.events = response.data;
-                })
-            },
-            getFollowNum() {
-                console.log("getFollowNum", this.viewUser.id)
-                this.axios({
-                    url: "/api/follow/followCounts/"+this.viewUser.id,
-                    method: "get",
-                }).then(response => {
-                    this.followNum = response.data;
-                    
-                })
-            },
-            getFollowerNum() {
-                console.log("getFollowerNum", this.viewUser.id)
-
-                this.axios({
-                    url: "/api/follow/followerCounts/"+this.viewUser.id,
-                    method: "get",
-                }).then(response => {
-                    this.followerNum = response.data;
                 })
             },
             getPastEvents() {
@@ -281,10 +276,6 @@ export default {
 .base {
 
     display: flex;
-}
-
-.follow {
-    padding: 20px 0 20px 0;
 }
 
 .avator {

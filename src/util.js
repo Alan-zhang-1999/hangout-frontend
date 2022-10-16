@@ -35,7 +35,7 @@ export async function checkLoginStatus() {
             data.gender = response.data.gender
             data.job = response.data.job
             data.location = response.data.location
-            //data.id = response.data.id
+            data.id = response.data.id
             return data;
         })
 		return res;

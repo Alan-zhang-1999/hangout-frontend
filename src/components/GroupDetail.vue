@@ -29,7 +29,7 @@
                 <template #cover>
                     <img :src="group.backgroundImage">
                 </template>
-                {{event.time}}
+                {{formatDate(event.time)}}
             </n-card>
 
     </div>
@@ -49,7 +49,7 @@
     </div>
 </template>
 <script>
-import { checkLoginStatus, getUserId } from '../util.js'
+import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 import { ref } from 'vue'
 
 const currentDate = ref(new Date())
@@ -170,6 +170,9 @@ export default {
                 console.log(response.data);
                 this.events = response.data;
             })
+        },
+        formatDate(date) {
+            return formatDate(date);
         }
     },
 }
