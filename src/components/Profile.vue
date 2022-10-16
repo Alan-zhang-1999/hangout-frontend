@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="profile-page">
         <div class="p-info">
             <div class="profile-article">
                 <div class="base">
@@ -11,15 +11,15 @@
                                   
                     </div>
                     <div class="info">
-                        <div class="name" style="display: inline-block; margin-right: 50px;"><p><el-icon><User /></el-icon>&nbsp;{{this.username}}</p></div>
+                        <div class="name" style="display: inline-block; margin-right: 50px;"><p><el-icon><User /></el-icon>&nbsp;&nbsp;&nbsp;{{this.username}}</p></div>
                         <div style="display: inline-block;"><el-icon  v-if="isMyProfile==true" @click="editProfile" ><Edit /></el-icon></div>
                         
-                        <div class="name" v-if="this.profile.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.profile.gender}}</p></el-tag></div>
-                        <div class="name" v-else-if="this.profile.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.profile.gender}}</p></el-tag></div>
-                        <div class="name"><el-tag type="warning"><el-icon><Calendar /></el-icon>{{formatDate(this.profile.birthday).split(" ")[0]}}</el-tag></div>
-                        <div class="name"><el-tag type="success">{{this.profile.job}}</el-tag></div>
-                        <div class="name"><el-tag type="info"><el-icon><Location /></el-icon>{{this.profile.location}}</el-tag></div>
-                        <div class="name" style="margin-bottom: 50px;"><el-tag>Biography: {{this.profile.biography}}</el-tag></div>
+                        <div class="name" v-if="this.profile.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>&nbsp;&nbsp;{{this.profile.gender}}</p></el-tag></div>
+                        <div class="name" v-else-if="this.profile.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>&nbsp;&nbsp;{{this.profile.gender}}</p></el-tag></div>
+                        <div class="name"><el-tag type="warning"><el-icon><Calendar /></el-icon>&nbsp;&nbsp;{{formatDate(this.profile.birthday).split(" ")[0]}}</el-tag></div>
+                        <div class="name"><el-tag type="success"><el-icon><SuitcaseLine /></el-icon>&nbsp;&nbsp;{{this.profile.job}}</el-tag></div>
+                        <div class="name"><el-tag type="info"><el-icon><Location /></el-icon>&nbsp;&nbsp;{{this.profile.location}}</el-tag></div>
+                        <div class="name" style="margin-bottom: 50px;"><el-tag><el-icon><Memo /></el-icon>&nbsp;&nbsp;Bio: {{this.profile.biography}}</el-tag></div>
                         
                     </div>
 
@@ -262,9 +262,9 @@ export default {
 }
 </script>
 <style>
-.page {
+.profile-page {
     text-align: center;
-    background-color: rgb(234, 238, 231);
+    
 
 }
 
@@ -275,7 +275,7 @@ export default {
     width: 66%;
     height: auto;
     padding: 5px;
-    border: 1px solid;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
 }
 
 .base {

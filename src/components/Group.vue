@@ -23,9 +23,16 @@
                     <img :src="group.backgroundImage"/>
                 </div>
                 <div class="infor">
-                <p>{{group.name }}</p>
-                <p>{{group.information}}</p>
-                <p>{{group.location}}</p>
+                <div class="infor-show">
+                    <div><el-icon size=30px><officeBuilding />&nbsp;</el-icon></div>
+                    <div>{{group.name }}</div>
+            </div>
+
+                <div class="infor-show">
+                    <div><el-icon size=30px><Location />&nbsp;</el-icon></div>
+                    <div>{{group.location}}</div>
+                </div>
+                
             </div>
             </div>
         </div>
@@ -39,7 +46,7 @@
                 </div>
                 <div class="infor">
                 <p>{{group.name }}</p>
-                <p>{{group.information}}</p>
+                <!-- <p>{{group.information}}</p> -->
                 <p>{{group.location}}</p>
             </div>
             </div>
@@ -134,5 +141,13 @@ export default {
         border-radius: 10px;
         display: block;
         /* background-color: white; */
+    }
+    
+    .infor-show{
+        display: flex;
+        align-items: center;
+        text-align: center;
+        vertical-align: middle;
+
     }
 </style>

@@ -185,6 +185,7 @@
             margin: auto 0px auto 400px;
         }
     .recommend-events {
+        
         text-align: center;
         margin:20px;
         align-items: center;
@@ -227,15 +228,17 @@
     .recommend-groups {
         padding-left: 200px;
         padding-right: 200px;
-    
+        
         text-align: center;
         margin: 20px;
         display: flex;
         text-align: center;
         flex-direction: row;
         justify-content:space-between;
-    
         align-items:center;
+        background-color: #f1f4f8;
+        height: auto;
+        overflow: auto;
     }
     .group-detail {
         margin: 20px 80px 20px 80px;

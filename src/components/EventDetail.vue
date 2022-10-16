@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="detail-page">
 
         <el-button type="primary" @click="back" style="float:left">Back</el-button>
         <el-button type="primary" v-if="user.loginStatus && !check" @click="joinEvent" style="float:left">Join
@@ -12,28 +12,29 @@
                 <img :src="event.backgroundImage" />
 
             </div>
-            <div class="info">
+            <div class="information">
                 <p>{{event.name}}</p>
                 <p>{{event.location}}</p>
                 <p>{{formatDate(event.time)}}</p>
                 <p>{{event.topic}}</p>
-                <p>{{event.information}}</p>
+                <p style="text-align:justify">{{event.information}}</p>
             </div>
 
 
 
         </div>
-        <h1 class="item-row"># Users</h1>
+        <h1 class="item-row"># Users <el-tag>{{users.length}}</el-tag></h1>
 
-        <div class="users">
-            <div class="user" v-for="user in users">
+        <div class="bottom-users">
+            <h3 v-if="users.length==0" > This group has no users now. </h3>
+            <div class="bottom-user" v-for="user in users">
                 <div class="icon">
                     <!--<n-avatar round
                 :size="30"
                 src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />-->
-                    <el-avatar @click.native="goProfile(user.id)">{{user.username.slice(0, 3)}}</el-avatar>
+                    <el-avatar :size="30" @click.native="goProfile(user.id)">{{user.username.slice(0, 3)}}</el-avatar>
                 </div>
-                <div class="name">{{user.email}}</div>
+                <div class="bottom-name">{{user.email}}</div>
             </div>
         </div>
 
