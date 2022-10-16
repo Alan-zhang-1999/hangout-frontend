@@ -11,7 +11,7 @@
                     <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
             </el-form-item>
             <el-form-item label="Biography">
-                <el-input type="textarea" v-model="profile.biography"></el-input>
+                <input type="textarea" v-model="profile.biography"/>
             </el-form-item>
             <el-form-item label="Gender">
                 <el-radio-group v-model="profile.gender">
@@ -20,7 +20,7 @@
                 </el-radio-group>
             </el-form-item>
             <el-form-item label="Occupation">
-                <el-input v-model="profile.occupation"></el-input>
+                <input v-model="profile.occupation"/>
             </el-form-item>
             <el-form-item label="Location">
                 <input type="text" v-model="profile.location" placeholder="" ref="address" class="textinput" />
