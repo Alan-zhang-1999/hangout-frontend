@@ -8,7 +8,7 @@
                 <el-input v-model="Password" type="password"></el-input>
             </el-form-item>
             <el-form-item>
-                <router-link to="forget" class="L1">forget password?</router-link>
+                <!-- <router-link to="forget" class="L1">forget password?</router-link> -->
                 <router-link to="SignUp" class="L2">Register</router-link>
             </el-form-item>
             <el-form-item>
