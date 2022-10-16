@@ -139,6 +139,7 @@ export default {
                 console.log("this.userId this.user.id", this.userId, this.user.id, this.userId == this.user.id)
                 if (this.userId == this.user.id){
                     this.isMyProfile = true
+                   
                     this.viewUser = this.user
                     console.log("###", this.viewUser)
                 } else {
