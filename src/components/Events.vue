@@ -18,7 +18,7 @@
 
         <div class="show" v-if="events.length != 0">
             <article v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
-                <img :src="event.backgroundImage" alt = 'event img'/>
+                <!--<img :src="event.backgroundImage"/>-->
                 <p>Name: {{ event.name }}</p>
                 <p>Date: {{formatDate(event.time)}}</p>
                 <p>Location: {{event.location}}</p>
@@ -117,10 +117,10 @@
         overflow: hidden;
     }
     .event-container {
-        position: relative;
+
         float: left;
 		width: 400px;
-		height: 300px;
+		height: 200px;
         margin:10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
         border-radius:10px;    
