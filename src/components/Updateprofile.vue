@@ -125,7 +125,7 @@ import { generateFileName, getUserId } from '../util.js'
                     method: "put",
                     data: {
                         "background" : this.profile.background,
-                        "id" : this.profile.id,
+                        //"id" : this.profile.id,
                         "biography" : this.profile.biography,
                         "birthday" : this.profile.birthday,
                         "gender" : this.profile.gender,

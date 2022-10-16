@@ -31,7 +31,7 @@
                     <!--<n-avatar round
                 :size="30"
                 src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />-->
-                    <el-avatar @click.native="goProfile(user.id)" :src="this.user.background"></el-avatar>
+                    <el-avatar @click.native="goProfile(user.id)" >{{user.username}}</el-avatar>
                 </div>
                 <div class="name">{{user.email}}</div>
             </div>
@@ -144,6 +144,7 @@ export default {
                 }
             }).then(response => {
                 this.users = response.data;
+                console.log("!!!",this.users)
             })
         },
         getUserProfile(email) {
@@ -151,6 +152,7 @@ export default {
                 url: "/api/userProfile/" + email,
                 method: "get",
             }).then(response => {
+                
                 console.log(response.data);
             })
         }

@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <el-row>
+        <el-row class="row-form">
             <el-form ref="form">
                 <el-form-item>
                     <el-input clearable placeholder="search event" v-model="keyword">
@@ -17,21 +17,31 @@
         </el-row>
 
         <div class="show" v-if="events.length != 0">
-            <article v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
+            
+            <article v-for="event in events" class="events-container" @click="getEventDetail(event.id)">
                 <!--<img :src="event.backgroundImage"/>-->
-                <p>Name: {{ event.name }}</p>
-                <p>Date: {{formatDate(event.time)}}</p>
-                <p>Location: {{event.location}}</p>
+                <div class="events-img">
+                    <img :src="event.backgroundImage"/>
+                </div>
+                <div class="infor">
+                    <p>Name: {{ event.name }}</p>
+                    <p>Date: {{formatDate(event.time)}}</p>
+                    <p>Location: {{event.location}}</p>
+                </div>
             </article>
         </div>
         <h2 v-else>There are no events you want.</h2>
         <div class="show" v-if="guessYouLike.length != 0">
             <h2>Guess You Like</h2>
-            <div v-for="event in guessYouLike" class="event-container" @click="getEventDetail(event.id)">
-                <p>Name: {{ event.name }}</p>
-                <p>Date: {{formatDate(event.time)}}</p>
-                <p>Location: {{event.location}}</p>
-
+            <div v-for="event in guessYouLike" class="events-container" @click="getEventDetail(event.id)">
+                <div class="events-img">
+                    <img :src="event.backgroundImage"/>
+                </div>
+                <div class="infor">
+                    <p>Name: {{ event.name }}</p>
+                    <p>Date: {{formatDate(event.time)}}</p>
+                    <p>Location: {{event.location}}</p>
+                </div>
             </div>
         </div>
         </div>
@@ -115,20 +125,38 @@
 <style>
     .show {
         overflow: hidden;
+        
     }
-    .event-container {
+
+    .events-container {
 
         float: left;
-		width: 400px;
-		height: 200px;
+		width: 420px;
+		height: 120px;
+        padding:14px;
         margin:10px;
         box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
         border-radius:10px;    
-        display: block;
-        /* background-color: white; */
+        display:flex;
+        background-color: #ecf1f6;
+        align-items: center;
+        justify-content: center;
     }
-    .show {
-        overflow: hidden;
+    .events-img {
+        width: 120px;
+        height: 120px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
+    .events-img img {
+        width: 100%;
+    height: auto;
+
+    }
+    .infor{
+        margin-left:30px;
+    }
+
 
 </style>

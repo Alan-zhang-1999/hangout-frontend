@@ -17,21 +17,31 @@
 
         </el-row>
         <div v-if="groups.length != 0">
-            <div v-for="group in groups" class="group-container" @click="getGroupDetail(group.id)">
+            <div v-for="group in groups" class="events-container" @click="getGroupDetail(group.id)">
                 <!-- <p><img :src="group.backgroundImage" /> -->
+                <div class="events-img">
+                    <img :src="group.backgroundImage"/>
+                </div>
+                <div class="infor">
                 <p>{{group.name }}</p>
                 <p>{{group.information}}</p>
                 <p>{{group.location}}</p>
+            </div>
             </div>
         </div>
         <h2 v-else>There are no groups you want.</h2>
         <div v-if="guessYouLike.length != 0">
             <h2>Guess You Like</h2>
-            <div v-for="group in guessYouLike" class="group-container" @click="getGroupDetail(group.id)">
+            <div v-for="group in guessYouLike" class="events-container" @click="getGroupDetail(group.id)">
                 <!-- <p><img :src="group.backgroundImage" /> -->
+                    <div class="events-img">
+                    <img :src="group.backgroundImage"/>
+                </div>
+                <div class="infor">
                 <p>{{group.name }}</p>
                 <p>{{group.information}}</p>
                 <p>{{group.location}}</p>
+            </div>
             </div>
         </div>
     </div>

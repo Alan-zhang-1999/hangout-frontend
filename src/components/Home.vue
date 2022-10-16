@@ -41,6 +41,9 @@
                 <el-pagination background @current-change="Page2" :page-size="this.pageSize2" layout="prev, pager, next" :total="this.events.length" />
             </div>
         </div>
+        <div class="recommend-events-title" style="font-size:25px">
+                Groups you may be interested in!
+            </div>
         <div class="recommend-groups">
             <div class="group-detail" v-for="group in groups" @click="gotoGroupdetail(group.id)">
                 <div class="group-img">
@@ -184,6 +187,7 @@
     .recommend-events {
         text-align: center;
         margin:20px;
+        align-items: center;
     }
         .recommend-events-show {
             display:flex;
@@ -200,8 +204,8 @@
                 text-align: center;
                 flex-direction:row;
                 align-items:center;
-                background-color: rgb();
-                border:1px solid black;
+        
+                box-shadow: rgba(0, 0, 0, 0.16) 0px 4px 8px;
            }
                 .event-img{
                     padding:20px;
@@ -209,7 +213,6 @@
     .recommend-events-right {
         height: 200px;
         width: 400px;
-        background-color: rgb();
         border: 1px solid black;
         display: flex;
         text-align: center;
@@ -217,25 +220,28 @@
         align-items: center;
     }
     .recommend-events-page {
-        margin: auto 0px auto 400px;
+        margin: 12px 0px auto 400px;
         width: fit-content;
         
     }
     .recommend-groups {
-        
+        padding-left: 200px;
+        padding-right: 200px;
+    
         text-align: center;
         margin: 20px;
         display: flex;
         text-align: center;
         flex-direction: row;
         justify-content:space-between;
-        background-color:cadetblue;
+    
+        align-items:center;
     }
     .group-detail {
         margin: 20px 80px 20px 80px;
         height: 200px;
         width: 200px;
-        background-color: wheat;
+        
     }
     .group-img{
         margin-top:20px;
