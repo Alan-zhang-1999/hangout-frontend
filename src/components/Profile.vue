@@ -3,13 +3,27 @@
         <div class="p-info">
             <div class="profile-article">
                 <div class="base">
-                    <div class="avator">
+                    <!--<div class="avator">
                         <el-avatar>{{username}}</el-avatar>
                     </div>
                     <div class="info">
                         <div class="name"><p>{{viewUser.email}}</p></div>
                         <div class="name"><p>{{viewUser.id}}</p></div>
                         <div class="name"><p>{{viewUser.birthday}}</p></div>
+                    </div>-->
+                    <div class="avator">
+                        <n-avatar round
+                                  :size="100"
+                                  :src="this.viewUser.background" />
+                    </div>
+                    <div class="info">
+                        <div class="name"><p><el-icon><User /></el-icon>{{this.username}}</p></div>
+                        <div class="name" v-if="this.viewUser.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
+                        <div class="name" v-else-if="this.viewUser.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
+                        <div class="name"><el-tag  type="warning"><el-icon><Calendar /></el-icon>{{this.viewUser.birthday}}</el-tag></div>
+                        <el-tag  type="success">{{this.viewUser.job}}</el-tag>
+                        <div class="name"><el-tag  type="info"><el-icon><Location /></el-icon>{{this.viewUser.location}}</el-tag></div>
+                        <div >{{this.viewUser.biography}}</div>
                     </div>
 
                     <el-icon  v-if="isMyProfile==true" @click="editProfile" >
@@ -211,6 +225,7 @@ export default {
                     method: "get",
                 }).then(response => {
                     this.followNum = response.data;
+                    
                 })
             },
             getFollowerNum() {

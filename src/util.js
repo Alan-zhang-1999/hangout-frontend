@@ -9,7 +9,7 @@ export async function checkLoginStatus() {
 		email: "",
         background: "",
         biography: "",
-        bithday: "",
+        birthday: "",
         gender: "",
         job: "",
         location: "",
@@ -31,7 +31,7 @@ export async function checkLoginStatus() {
         }).then(response => {
             data.background = response.data.background
             data.biography = response.data.biography
-            data.bithday = response.data.bithday
+            data.birthday = response.data.birthday
             data.gender = response.data.gender
             data.job = response.data.job
             data.location = response.data.location
