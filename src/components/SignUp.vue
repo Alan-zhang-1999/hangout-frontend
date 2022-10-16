@@ -38,6 +38,7 @@
                 }).then(response => {
                     console.log(response.data)
                     if (response.data.status) {
+                        window.sessionStorage.setItem("userEmail", this.email)
                         this.$message({
                             message: response.data.message,
                             type: 'success',

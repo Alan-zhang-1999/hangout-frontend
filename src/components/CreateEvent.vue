@@ -77,7 +77,7 @@ export default {
             percentage: 0,
             uploadStatus: "",
             groups: [],
-            groupId: ""
+            groupId: null
         }
     },
     mounted: function () {
@@ -158,6 +158,10 @@ export default {
                     offset: 80
                 });
                 return;
+            }
+            console.log("this.groupId", this.groupId)
+            if (this.groupId == null) {
+                this.groupId = 0
             }
             this.axios({
                 url: "/api/event/create?groupId="+this.groupId,
