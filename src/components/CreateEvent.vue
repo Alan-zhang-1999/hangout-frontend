@@ -93,14 +93,15 @@ export default {
             };
             const options = {
                 bounds: defaultBounds,
-                fields: ["address_components", "geometry", "icon", "name"],
+                fields: ["address_components", "geometry", "name","formatted_address"],
                 strictBounds: false,
                 types: ["establishment"],
             };
             const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
             autocomplete.addListener("place_changed", () => {
                 const place = autocomplete.getPlace();
-                this.event.location = place.name;
+                console.log(place);
+                this.event.location = place.name + ", " + place.formatted_address;
             });
         });
         this.$refs.selectImage.addEventListener('change', async () => {
