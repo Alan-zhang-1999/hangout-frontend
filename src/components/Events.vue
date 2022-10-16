@@ -24,9 +24,9 @@
                     <img :src="event.backgroundImage"/>
                 </div>
                 <div class="infor">
-                    <p>Name: {{ event.name }}</p>
-                    <p>Date: {{formatDate(event.time)}}</p>
-                    <p>Location: {{event.location}}</p>
+                    <p><el-icon><Tickets /></el-icon>&nbsp;&nbsp;{{ event.name }}</p>
+                    <p><el-icon><Calendar /></el-icon>&nbsp;&nbsp;{{formatDate(event.time)}}</p>
+                    <p><el-icon><Location /></el-icon>&nbsp;&nbsp;{{event.location}}</p>
                 </div>
             </article>
         </div>

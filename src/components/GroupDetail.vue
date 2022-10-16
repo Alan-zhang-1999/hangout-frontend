@@ -8,7 +8,6 @@
                 <!-- <el-image class="main-img" :src="group.backgroundImage" /> -->
             </div>
             <div class="info">
-                <p>{{group.id}}</p>
                 <p>{{group.name}}</p>
                 <p>{{group.location}}</p>
                 <p>{{group.information}}</p>
@@ -28,16 +27,13 @@
                 <template #cover>
                     <img :src="group.backgroundImage">
                 </template>
-                {{event.time}}
+                {{formatDate(event.time)}}
             </n-card>
         </el-row>
         <h1 class="item-row"># Users</h1>
         <div class="users">
             <div class="user" v-for="user in users">
                 <div class="icon">
-                    <!--<n-avatar round
-              :size="30"
-              src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />-->
                     <el-avatar @click.native="goProfile(user.id)">{{user.username.slice(0, 3)}}</el-avatar>
                 </div>
                 <div class="name">{{user.email}}</div>
@@ -46,7 +42,7 @@
     </div>
 </template>
 <script>
-import { checkLoginStatus, getUserId } from '../util.js'
+import { checkLoginStatus, getUserId, formatDate } from '../util.js'
 import { ref } from 'vue'
 
 const currentDate = ref(new Date())
@@ -167,6 +163,9 @@ export default {
                 console.log(response.data);
                 this.events = response.data;
             })
+        },
+        formatDate(date) {
+            return formatDate(date);
         }
     },
 }
