@@ -1,5 +1,5 @@
 <template>
-    <div class="page">
+    <div class="detail-page">
         <el-button type="primary" @click="back" style="float:left">Back</el-button>
         <div class="main-ncard">
 
@@ -7,10 +7,11 @@
                 <img :src="group.backgroundImage" />
                 <!-- <el-image class="main-img" :src="group.backgroundImage" /> -->
             </div>
-            <div class="info">
+            <div class="information">
+                <p>{{group.id}}</p>
                 <p>{{group.name}}</p>
                 <p>{{group.location}}</p>
-                <p>{{group.information}}</p>
+                <p style="text-align:justify">{{group.information}}</p>
             </div>
 
 
@@ -20,23 +21,29 @@
                 <el-button type="primary" v-if="user.loginStatus && check" @click="leaveGroup">Leave</el-button>
             </el-row>
         </div>
-        <h1 class="item-row"># Events</h1>
+        <h1 ># Events <el-tag>{{events.length}}</el-tag> </h1>
+        <h3 v-if="events.length==0" > This group has no events now. </h3>
 
-        <el-row class="item-row" v-for="event in events">
-            <n-card :title="event.name" class="item-ncard">
+        <div class="item-row" >
+            <n-card :title="event.name" class="item-ncard" v-for="event in events">
                 <template #cover>
                     <img :src="group.backgroundImage">
                 </template>
                 {{formatDate(event.time)}}
             </n-card>
-        </el-row>
-        <h1 class="item-row"># Users</h1>
-        <div class="users">
-            <div class="user" v-for="user in users">
+
+    </div>
+        <h1 ># Users <el-tag>{{users.length}}</el-tag> </h1>
+        <div class="bottom-users">
+            <h3 v-if="users.length==0" > This group has no users now. </h3>
+            <div class="bottom-user" v-for="user in users">
                 <div class="icon">
-                    <el-avatar @click.native="goProfile(user.id)">{{user.username.slice(0, 3)}}</el-avatar>
+                    <!--<n-avatar round
+              
+              src="https://07akioni.oss-cn-beijing.aliyuncs.com/07akioni.jpeg" />-->
+                    <el-avatar :size="30" @click.native="goProfile(user.id)">{{user.username.slice(0, 3)}}</el-avatar>
                 </div>
-                <div class="name">{{user.email}}</div>
+                <div class="bottom-name">{{user.email}}</div>
             </div>
         </div>
     </div>
@@ -172,8 +179,9 @@ export default {
 
 </script>
 <style>
-.page {
-    background-color: rgb(255, 247, 237);
+.detail-page {
+    text-align: center;
+    align-items: center;
 }
 
 .main-ncard {
@@ -181,17 +189,23 @@ export default {
     margin: auto;
     margin-bottom: 20px;
     display: flex;
+    
 }
 
 .item-ncard {
-    max-width: 200px;
+    width: 200px;
     margin: 5px;
     background-color: rgb(234, 238, 231);
 }
 
 .item-row {
+    
+    display: flex;
+    justify-content: center;
+    margin-top: 60px;
     margin-left: 20%;
     margin-right: 20%;
+    widows: 100px;
 
 }
 
@@ -204,7 +218,7 @@ export default {
 
 .main-img-tamplate {
     width: 300px;
-    height: 200px;
+    height: 300px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -214,14 +228,14 @@ export default {
 
 
 .main-img-tamplate img {
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
 }
 
-.users {
+.bottom-users {
     margin-left: 20%;
     margin-right: 20%;
-    background-color: antiquewhite;
+    background-color: #f4ebe2;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -229,7 +243,7 @@ export default {
     height: auto;
 }
 
-.user {
+.bottom-user {
     display: flex;
     height: 30px;
     background-color: rgb(234, 238, 231);
@@ -237,9 +251,14 @@ export default {
     margin: 5px 10px 5px 10px;
 }
 
-.name {
+.bottom-name {
     padding-left: 10px;
     font-size: 20px;
 }
+.information{
+    width: 360px;
+    padding-left: 30px;
+}
+
 </style>
   

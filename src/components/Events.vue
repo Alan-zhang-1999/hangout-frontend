@@ -125,7 +125,7 @@
 <style>
     .show {
         overflow: hidden;
-        
+
     }
 
     .events-container {
