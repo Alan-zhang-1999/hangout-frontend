@@ -42,7 +42,7 @@
 
 <script>
 import { uploadFile } from '../storage.js'
-import { generateFileName, getUserId } from '../util.js'
+import { checkLoginStatus, generateFileName, getUserId } from '../util.js'
     export default{
         data(){
             return {
@@ -57,29 +57,33 @@ import { generateFileName, getUserId } from '../util.js'
                 },
                 email: this.$route.params.email,
                 percentage: 0,
-                uploadStatus: ""
+                uploadStatus: "",
+                user: {}
             }
         },
-        mounted: function () {
+        mounted: async function () {
             navigator.geolocation.getCurrentPosition(position => {
-                const lat = position.coords.latitude;
-                const lng = position.coords.longitude;
-                const center = { lat, lng };
-                const defaultBounds = {
-                    north: center.lat + 0.1,
-                    south: center.lat - 0.1,
-                    east: center.lng + 0.1,
-                    west: center.lng - 0.1,
-                };
-                const options = {
-                    bounds: defaultBounds,
-                    componentRestrictions: { country: "au" },
-                    fields: ["address_components", "geometry", "icon", "name"],
-                    strictBounds: false,
-                    types: ["establishment"],
-                };
-                const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
+            const lat = position.coords.latitude;
+            const lng = position.coords.longitude;
+            const center = { lat, lng };
+            const defaultBounds = {
+                north: center.lat + 0.1,
+                south: center.lat - 0.1,
+                east: center.lng + 0.1,
+                west: center.lng - 0.1,
+            };
+            const options = {
+                bounds: defaultBounds,
+                fields: ["address_components", "geometry", "name","formatted_address"],
+                strictBounds: false,
+                types: ["establishment"],
+            };
+            const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                this.profile.location = place.name + ", " + place.formatted_address;
             });
+        });
             this.$refs.selectImage.addEventListener('change', async () => {
                 this.uploadStatus = "";
                 const image = this.$refs.selectImage.files[0];
@@ -89,37 +93,36 @@ import { generateFileName, getUserId } from '../util.js'
                 this.profile.background = url;
                 this.$refs.image.src = url;
             });
-
-            this.getuserProfile();
+            this.user = await checkLoginStatus().then(() => {
+                this.getuserProfile();
+            })
+            
         },
         methods:{
             back() {
                 this.$router.go(-1)
             },
             getuserProfile(){
-                console.log(this.email)
                 this.axios({
                     url: "/api/userProfile/" + this.email,
                     method: "get",
                 }).then(response => {
-                    console.log(response.data);
                     if(response.data != null) {
                         
                         this.profile.biography = response.data.biography; 
                         this.profile.id = response.data.id;//this.user.id;
                         this.profile.background = response.data.background;
+                        console.log('background', this.profile.background)
                         this.profile.occupation = response.data.job;
                         this.profile.gender = response.data.gender;
                         this.profile.location = response.data.location;
                         this.profile.birthday = response.data.birthday; 
                         this.$refs.image.src = this.profile.background; 
                     }
-                    console.log("check",this.profile.id); 
                     console.log(this.profile);
                 })
             },
             Update() {
-                console.log(this.profile)
                 this.axios({
                     url: "/api/userProfile/update",
                     method: "put",
@@ -133,7 +136,7 @@ import { generateFileName, getUserId } from '../util.js'
                         "location" : this.profile.location,
                     }
                 }).then(async (response) => {
-                    console.log(response.data)
+                    console.log("update", response.data)
                     
                     this.$router.push('/Profile/' + response.data.id)
                 })
