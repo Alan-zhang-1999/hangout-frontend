@@ -139,8 +139,6 @@ export default {
                 this.getEvents();
                 this.getPastEvents();
                 this.getCurrentEvents();
-                this.getFollowNum();
-                this.getFollowerNum();
                 this.getUserGroups();
             },
             chatWithHim() {
@@ -218,26 +216,6 @@ export default {
                     this.events = response.data;
                 })
             },
-            getFollowNum() {
-                console.log("getFollowNum", this.viewUser.id)
-                this.axios({
-                    url: "/api/follow/followCounts/"+this.viewUser.id,
-                    method: "get",
-                }).then(response => {
-                    this.followNum = response.data;
-                    
-                })
-            },
-            getFollowerNum() {
-                console.log("getFollowerNum", this.viewUser.id)
-
-                this.axios({
-                    url: "/api/follow/followerCounts/"+this.viewUser.id,
-                    method: "get",
-                }).then(response => {
-                    this.followerNum = response.data;
-                })
-            },
             getPastEvents() {
                 this.axios({
                     url: "/api/event/past/"+this.viewUser.id,
@@ -298,10 +276,6 @@ export default {
 .base {
 
     display: flex;
-}
-
-.follow {
-    padding: 20px 0 20px 0;
 }
 
 .avator {
