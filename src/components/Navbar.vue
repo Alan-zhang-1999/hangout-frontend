@@ -113,6 +113,7 @@ export default {
     methods: {
         checkLogin() {
             checkLoginStatus().then(async (res) => {
+                console.log(res);
                 this.loginStatus = res.loginStatus;
                 this.username = res.username;
                 console.log("loginStatus", this.loginStatus)
