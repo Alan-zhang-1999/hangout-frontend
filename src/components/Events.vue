@@ -15,13 +15,7 @@
             <el-button type="primary" v-if="user.loginStatus" @click="toCreateEvent">Create Event</el-button>
 
         </el-row>
-        <el-row>
-            <el-button type="primary" @click="getEvents">All</el-button>
-            <el-button type="primary" @click="getPastEvents">Past</el-button>
-            <el-button type="primary" @click="getCurrentEvents">Current</el-button>
-            <el-button type="primary" v-if="user.loginStatus" @click="getJoinedEvents">Joined</el-button>
 
-        </el-row>
         <div class="show" v-if="events.length != 0">
             <div v-for="event in events" class="event-container" @click="getEventDetail(event.id)">
                 <p>Name: {{ event.name }}</p>
@@ -104,33 +98,6 @@
             getEvents() {
                 this.axios({
                     url: "/api/event/all",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-                this.guessYouLike = [];
-            },
-            getPastEvents() {
-                this.axios({
-                    url: "/api/event/past",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-                this.guessYouLike = [];
-            },
-            getCurrentEvents() {
-                this.axios({
-                    url: "/api/event/current",
-                    method: "get",
-                }).then(response => {
-                    this.events = response.data;
-                })
-                this.guessYouLike = [];
-            },
-            getJoinedEvents() {
-                this.axios({
-                    url: "/api/event/joined/" + this.user.email,
                     method: "get",
                 }).then(response => {
                     this.events = response.data;

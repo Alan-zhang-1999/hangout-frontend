@@ -93,12 +93,15 @@ export default {
             };
             const options = {
                 bounds: defaultBounds,
-                componentRestrictions: { country: "au" },
                 fields: ["address_components", "geometry", "icon", "name"],
                 strictBounds: false,
                 types: ["establishment"],
             };
             const autocomplete = new google.maps.places.Autocomplete(this.$refs["address"], options);
+            autocomplete.addListener("place_changed", () => {
+                const place = autocomplete.getPlace();
+                this.event.location = place.name;
+            });
         });
         this.$refs.selectImage.addEventListener('change', async () => {
             this.uploadStatus = "";
