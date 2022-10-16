@@ -145,7 +145,7 @@ export default {
                 } else {
                     console.log(response.data.message)
                 }
-                this.$router.go(0)
+                this.$router.push("/Home");
             })
         },
         goSignUp() {
