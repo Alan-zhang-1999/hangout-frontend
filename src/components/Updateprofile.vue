@@ -5,10 +5,11 @@
         <el-button type="primary" @click="back">Back</el-button>
         <div class="profile-detail">
             <el-form-item label="Avatar">
-                    <img src="profile.background" alt="Avatar" ref="image" id="img" class="avatarinput"/>
+                    <img src="profile.background" alt="Avatar" ref="image" id="img" />
+                    
                     <input type="file" accept="image/*" ref="selectImage" />
                     <el-progress :percentage="percentage" :status="uploadStatus" id="progress"></el-progress>
-                </el-form-item>
+            </el-form-item>
             <el-form-item label="Biography">
                 <el-input type="textarea" v-model="profile.biography"></el-input>
             </el-form-item>
@@ -105,11 +106,13 @@ import { generateFileName } from '../util.js'
                     if(response.data != null) {
                         this.profile.biography = response.data.biography; 
                         this.profile.id = response.data.id;
-                        this.profile.gender = response.data.birthday;
+                        this.profile.background = response.data.background;
                         this.profile.occupation = response.data.job;
                         this.profile.gender = response.data.gender;
                         this.profile.location = response.data.location;
-                        this.profile.birthday = response.data.birthday;   
+                        this.profile.birthday = response.data.birthday; 
+                        this.$refs.image.src = this.profile.background;
+                        console.log(this.$refs.image.src);  
                     }
                    
                     console.log(this.profile);
@@ -140,10 +143,18 @@ import { generateFileName } from '../util.js'
 </script>
 <style>
     .profile-detail{
-        width:50%;
+        width: 40%;
+        margin-left: 30%;
+        margin-right: 30%;
 
     }
-    .avatarinput{
-        width:50px;
+    #img {
+        width: 200px;
+        height: 200px;
+        border-color: #dcdfe6;
+        border-width: 1px;
+        border-style: solid;
+        border-radius: 50%;
+        
     }
 </style>
