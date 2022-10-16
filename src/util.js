@@ -53,8 +53,8 @@ export async function getUserId(email) {
 	return response;
 }
 
-export function formatDate(date) {
-	return moment(date).format('YYYY-MM-DD HH:mm:ss')
+export function formatDate(date, fmt='YYYY-MM-DD HH:mm:ss') {
+	return moment(date).format(fmt)
 }
 
 export function generateFileName(prefix, extension) {

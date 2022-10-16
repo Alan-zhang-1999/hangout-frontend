@@ -3,27 +3,20 @@
         <div class="p-info">
             <div class="profile-article">
                 <div class="base">
-                    <!--<div class="avator">
-                        <el-avatar>{{username}}</el-avatar>
-                    </div>
-                    <div class="info">
-                        <div class="name"><p>{{viewUser.email}}</p></div>
-                        <div class="name"><p>{{viewUser.id}}</p></div>
-                        <div class="name"><p>{{viewUser.birthday}}</p></div>
-                    </div>-->
                     <div class="avator">
                         <n-avatar round
                                   :size="100"
-                                  :src="this.viewUser.background" />
+                                  :src="this.viewUser.background" /><br/><br/>
+                                  <div class = "biography">Biography: {{this.viewUser.biography}}</div>
                     </div>
                     <div class="info">
                         <div class="name"><p><el-icon><User /></el-icon>{{this.username}}</p></div>
                         <div class="name" v-if="this.viewUser.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
                         <div class="name" v-else-if="this.viewUser.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
-                        <div class="name"><el-tag  type="warning"><el-icon><Calendar /></el-icon>{{this.viewUser.birthday}}</el-tag></div>
-                        <el-tag  type="success">{{this.viewUser.job}}</el-tag>
+                        <div class="name"><el-tag  type="warning"><el-icon><Calendar /></el-icon>{{formatDate(this.viewUser.birthday).split(" ")[0]}}</el-tag></div>
+                        <div class="name"><el-tag  type="success">{{this.viewUser.job}}</el-tag></div>
                         <div class="name"><el-tag  type="info"><el-icon><Location /></el-icon>{{this.viewUser.location}}</el-tag></div>
-                        <div >{{this.viewUser.biography}}</div>
+                        
                     </div>
 
                     <el-icon  v-if="isMyProfile==true" @click="editProfile" >
@@ -58,7 +51,7 @@
 
                             <!-- <img src="{{ group.img}}"/> -->
                             <p>Name: {{ group.name }}</p>
-                            <p>Date: {{formatDate(group.time)}}</p>
+                            <p>Date: {{formatDate(group.time, 'YYYY-MM-DD')}}</p>
                             <p>Location: {{group.location}}</p>
 
                             <!-- <p>Topic: {{group.topic}}</p>
@@ -70,7 +63,7 @@
 
                             <!-- <img src="{{ event.img}}"/> -->
                             <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
+                            <p>Date: {{formatDate(event.time, 'YYYY-MM-DD')}}</p>
                             <p>Location: {{event.location}}</p>
 
                             <!-- <p>Topic: {{event.topic}}</p>
@@ -82,7 +75,7 @@
 
                             <!-- <img src="{{ event.img}}"/> -->
                             <p>Name: {{ event.name }}</p>
-                            <p>Date: {{formatDate(event.time)}}</p>
+                            <p>Date: {{formatDate(event.time, 'YYYY-MM-DD')}}</p>
                             <p>Location: {{event.location}}</p>
 
                             <!-- <p>Topic: {{event.topic}}</p>
@@ -285,7 +278,7 @@ export default {
 }
 
 .profile-article {
-    text-align: center;
+    text-align: left;
     margin: auto;
 
     width: 66%;
@@ -308,8 +301,15 @@ export default {
 }
 
 .info {
+    position: relative;
+    float: left;
     font-size: 20px;
     padding: 40px 0 0 120px;
+}
+
+.biography{
+    font-size:13px;
+    color:rgb(116, 113, 113);
 }
 
 .buttons {
