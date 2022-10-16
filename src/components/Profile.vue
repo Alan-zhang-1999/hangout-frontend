@@ -6,16 +6,16 @@
                     <div class="avator">
                         <n-avatar round
                                   :size="100"
-                                  :src="this.viewUser.background" /><br/><br/>
-                                  <div class = "biography">Biography: {{this.viewUser.biography}}</div>
+                                  :src="this.profile.background" /><br/><br/>
+                                  <div class = "biography">Biography: {{this.profile.biography}}</div>
                     </div>
                     <div class="info">
                         <div class="name"><p><el-icon><User /></el-icon>{{this.username}}</p></div>
-                        <div class="name" v-if="this.viewUser.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
-                        <div class="name" v-else-if="this.viewUser.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.viewUser.gender}}</p></el-tag></div>
-                        <div class="name"><el-tag  type="warning"><el-icon><Calendar /></el-icon>{{formatDate(this.viewUser.birthday).split(" ")[0]}}</el-tag></div>
-                        <div class="name"><el-tag  type="success">{{this.viewUser.job}}</el-tag></div>
-                        <div class="name"><el-tag  type="info"><el-icon><Location /></el-icon>{{this.viewUser.location}}</el-tag></div>
+                        <div class="name" v-if="this.profile.gender == 'male'"><el-tag><p><el-icon><Male /></el-icon>{{this.profile.gender}}</p></el-tag></div>
+                        <div class="name" v-else-if="this.profile.gender == 'female'"><el-tag type="danger"><p><el-icon><Female /></el-icon>{{this.profile.gender}}</p></el-tag></div>
+                        <div class="name"><el-tag  type="warning"><el-icon><Calendar /></el-icon>{{formatDate(this.profile.birthday).split(" ")[0]}}</el-tag></div>
+                        <div class="name"><el-tag  type="success">{{this.profile.job}}</el-tag></div>
+                        <div class="name"><el-tag  type="info"><el-icon><Location /></el-icon>{{this.profile.location}}</el-tag></div>
                         
                     </div>
 
@@ -144,12 +144,14 @@ export default {
                     console.log("###", this.viewUser)
                 } else {
                     this.isMyProfile = false
+                    
                     this.viewUser = await this.getUserById()
                     console.log("@@@", this.viewUser)
                 }
                 console.log(this.viewUser.email)
-                await this.getUserProfile(this.viewUser.email)
-                await this.getUserGroups();
+                this.profile = await this.getUserProfile(this.viewUser.email)
+                this.userGroups = await this.getUserGroups()
+                console.log("this.profile ", this.profile)
                 this.username = this.viewUser.username
                 console.log("profile", this.viewUser, this.user)
                 this.getEvents();
@@ -177,12 +179,12 @@ export default {
                 })
             },
             getUserProfile(email) {
-                this.axios({
+                return this.axios({
                     url: "/api/userProfile/" + email,
                     method: "get",
                 }).then(response => {
-                    console.log(response.data);
-                    this.profile = response.data
+                    console.log('getUserProfile', response.data);
+                    return response.data;
                 })
             },
             getUserById(userId) {
@@ -256,11 +258,12 @@ export default {
             },
             
             getUserGroups() {
-                this.axios({
+                return this.axios({
                     url: "/api/group/getUserGroup/"+this.viewUser.id,
                     method: "get",
                 }).then(response => {
-                    this.userGroups = response.data;
+                    // this.userGroups = response.data;
+                    return response.data
                 })
             },
             getJoinedEvents() {
